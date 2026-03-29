@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NIV'Pop — Quiénes somos</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --cream:#faf6f0;--ink:#16120d;--mid:#6b5e52;--light:#a89a8e;
+  --accent:#c4786a;--accent2:#f0d8d0;--green:#3d8b5e;
+  --fd:'Cormorant Garamond',serif;--fs:'Outfit',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--fs);background:var(--cream);color:var(--ink);line-height:1.6}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:16px 48px;background:rgba(250,246,240,.9);backdrop-filter:blur(12px);border-bottom:1px solid rgba(22,18,13,.06)}
+.nav-logo{font-family:var(--fd);font-size:22px;font-weight:600;color:var(--ink);text-decoration:none;letter-spacing:-.5px}
+.nav-logo span{color:var(--accent)}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a{font-size:13px;color:var(--mid);text-decoration:none;transition:color .15s}
+.nav-links a:hover{color:var(--ink)}
+.nav-cta{padding:9px 20px;background:var(--ink);color:#fff!important;border-radius:6px;font-size:13px;font-weight:500}
+
+/* HERO */
+.hero{padding:140px 48px 80px;max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.hero-eyebrow{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
+.hero-title{font-family:var(--fd);font-size:64px;font-weight:600;letter-spacing:-2px;line-height:.95;margin-bottom:20px}
+.hero-title em{font-style:italic;color:var(--accent)}
+.hero-desc{font-size:16px;color:var(--mid);font-weight:300;line-height:1.7;margin-bottom:32px;max-width:440px}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn-primary{padding:14px 28px;background:var(--ink);color:#fff;border-radius:8px;font-size:14px;font-weight:500;text-decoration:none;transition:opacity .15s}
+.btn-primary:hover{opacity:.85}
+.btn-secondary{padding:14px 28px;border:1px solid var(--accent);color:var(--accent);border-radius:8px;font-size:14px;font-weight:500;text-decoration:none;transition:all .15s}
+.btn-secondary:hover{background:var(--accent);color:#fff}
+.hero-visual{display:flex;flex-direction:column;gap:12px}
+.hero-card{background:#fff;border-radius:12px;padding:20px 24px;border:1px solid rgba(22,18,13,.06);box-shadow:0 2px 12px rgba(0,0,0,.04)}
+.hc-num{font-family:var(--fd);font-size:40px;font-weight:600;color:var(--accent);line-height:1}
+.hc-label{font-size:12px;color:var(--mid);margin-top:4px}
+
+/* MISIÓN / VISIÓN / VALORES */
+.mvv{padding:80px 48px;max-width:1100px;margin:0 auto}
+.mvv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
+.mvv-card{background:#fff;border-radius:14px;padding:32px;border:1px solid rgba(22,18,13,.06)}
+.mvv-icon{font-size:36px;margin-bottom:16px}
+.mvv-title{font-family:var(--fd);font-size:22px;font-weight:600;margin-bottom:12px}
+.mvv-text{font-size:14px;color:var(--mid);font-weight:300;line-height:1.7}
+
+/* VALORES */
+.values{padding:0 48px 80px;max-width:1100px;margin:0 auto}
+.section-label{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--light);margin-bottom:12px}
+.section-title{font-family:var(--fd);font-size:40px;font-weight:600;letter-spacing:-1px;margin-bottom:8px}
+.values-list{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:32px}
+.value-item{display:flex;gap:16px;padding:20px;background:#fff;border-radius:10px;border:1px solid rgba(22,18,13,.06)}
+.value-icon{width:40px;height:40px;border-radius:10px;background:var(--accent2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.value-name{font-size:15px;font-weight:600;margin-bottom:4px}
+.value-desc{font-size:13px;color:var(--mid);font-weight:300;line-height:1.5}
+
+/* PLANES */
+.planes{padding:80px 48px;background:#fff}
+.planes-inner{max-width:1100px;margin:0 auto}
+.planes-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:40px}
+.plan{border:1px solid #e8e4de;border-radius:14px;padding:24px;transition:all .2s}
+.plan:hover,.plan.featured{border-color:var(--accent);box-shadow:0 4px 24px rgba(196,120,106,.15)}
+.plan.featured{background:var(--ink);color:#fff}
+.plan-badge{display:inline-block;font-size:10px;padding:3px 10px;border-radius:20px;margin-bottom:12px;font-weight:600}
+.plan-name{font-family:var(--fd);font-size:22px;font-weight:600;margin-bottom:8px}
+.plan-price{font-family:var(--fd);font-size:32px;font-weight:700;margin-bottom:4px}
+.plan-price small{font-size:14px;font-weight:300;opacity:.6}
+.plan-desc{font-size:12px;opacity:.6;margin-bottom:20px;font-weight:300}
+.plan-features{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
+.plan-features li{font-size:13px;display:flex;align-items:center;gap:8px;opacity:.8}
+.plan-features li::before{content:'✓';font-weight:700;flex-shrink:0}
+.plan-btn{display:block;text-align:center;padding:12px;border-radius:8px;font-size:13px;font-weight:500;text-decoration:none;transition:all .15s}
+
+/* EQUIPO */
+.team{padding:80px 48px;max-width:1100px;margin:0 auto}
+.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
+.team-card{text-align:center;padding:32px 24px;background:#fff;border-radius:14px;border:1px solid rgba(22,18,13,.06)}
+.team-avatar{width:72px;height:72px;border-radius:50%;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;font-family:var(--fd)}
+.team-name{font-family:var(--fd);font-size:20px;font-weight:600;margin-bottom:4px}
+.team-role{font-size:12px;color:var(--accent);font-weight:500;letter-spacing:.5px;text-transform:uppercase;margin-bottom:12px}
+.team-bio{font-size:13px;color:var(--mid);font-weight:300;line-height:1.6}
+
+/* CONTACTO */
+.contact{padding:80px 48px;background:var(--ink)}
+.contact-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+.contact h2{font-family:var(--fd);font-size:40px;font-weight:600;color:#fff;letter-spacing:-1px;margin-bottom:16px}
+.contact p{font-size:15px;color:rgba(255,255,255,.5);font-weight:300;line-height:1.7;margin-bottom:32px}
+.contact-items{display:flex;flex-direction:column;gap:16px}
+.ci{display:flex;align-items:center;gap:14px}
+.ci-icon{width:40px;height:40px;border-radius:10px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.ci-label{font-size:11px;color:rgba(255,255,255,.3);margin-bottom:2px;text-transform:uppercase;letter-spacing:1px}
+.ci-val{font-size:14px;color:#fff;font-weight:400}
+.contact-form{display:flex;flex-direction:column;gap:12px}
+.cf-field{display:flex;flex-direction:column;gap:6px}
+.cf-field label{font-size:12px;color:rgba(255,255,255,.4)}
+.cf-field input,.cf-field textarea{padding:12px 16px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;font-family:var(--fs);font-size:13px;outline:none;transition:border-color .15s}
+.cf-field input:focus,.cf-field textarea:focus{border-color:rgba(196,120,106,.5)}
+.cf-field textarea{resize:vertical;min-height:100px}
+.cf-submit{padding:14px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-family:var(--fs);font-size:14px;font-weight:500;cursor:pointer;transition:opacity .15s}
+.cf-submit:hover{opacity:.88}
+
+/* FOOTER */
+footer{padding:32px 48px;background:#100c08;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.footer-logo{font-family:var(--fd);font-size:18px;color:rgba(255,255,255,.4);letter-spacing:-.3px}
+.footer-links{display:flex;gap:20px}
+.footer-links a{font-size:12px;color:rgba(255,255,255,.25);text-decoration:none}
+.footer-copy{font-size:12px;color:rgba(255,255,255,.2)}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .hero,.contact-inner{grid-template-columns:1fr}
+  .mvv-grid,.planes-grid,.team-grid{grid-template-columns:1fr 1fr}
+  .values-list{grid-template-columns:1fr}
+  nav{padding:14px 24px}
+  .hero{padding:120px 24px 60px}
+  .mvv,.values,.team,.contact,.planes-inner{padding-left:24px;padding-right:24px}
+  .planes{padding:60px 24px}
+}
+@media(max-width:600px){
+  .hero-title{font-size:44px}
+  .mvv-grid,.planes-grid,.team-grid{grid-template-columns:1fr}
+  .nav-links{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="../index.html" class="nav-logo">NIV<span>'</span>POP</a>
+  <div class="nav-links">
+    <a href="#mision">Misión</a>
+    <a href="#valores">Valores</a>
+    <a href="#planes">Planes</a>
+    <a href="#equipo">Equipo</a>
+    <a href="#contacto">Contacto</a>
+    <a href="../index.html" class="nav-cta">Probar el test →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <div class="hero-eyebrow">Psicología del sabor · Artesanía heladera</div>
+    <h1 class="hero-title">Una nieve<br>para cada <em>mente</em></h1>
+    <p class="hero-desc">NIV'Pop nació de una pregunta simple: ¿y si tu sabor favorito de nieve pudiera decirte algo profundo sobre ti? Combinamos psicología, gastronomía artesanal y tecnología para crear una experiencia única de autodescubrimiento.</p>
+    <div class="hero-btns">
+      <a href="../index.html" class="btn-primary">Descubrir mi sabor</a>
+      <a href="#contacto" class="btn-secondary">Hablar con nosotros</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-card"><div class="hc-num">16</div><div class="hc-label">Perfiles psicológicos únicos</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="hero-card"><div class="hc-num">3</div><div class="hc-label">Modos de descubrimiento</div></div>
+      <div class="hero-card"><div class="hc-num">90s</div><div class="hc-label">Tiempo promedio del test</div></div>
+    </div>
+    <div class="hero-card" style="background:var(--ink);color:#fff">
+      <div style="font-family:var(--fd);font-size:18px;font-weight:600;margin-bottom:6px">"Descubre quién eres<br>a través del sabor."</div>
+      <div style="font-size:12px;opacity:.4">NIV'Pop · 2026</div>
+    </div>
+  </div>
+</section>
+
+<!-- MISIÓN / VISIÓN / OBJETIVO -->
+<section class="mvv" id="mision">
+  <div class="section-label">Nuestra identidad</div>
+  <h2 class="section-title">Lo que nos mueve</h2>
+  <div class="mvv-grid">
+    <div class="mvv-card">
+      <div class="mvv-icon">🎯</div>
+      <div class="mvv-title">Misión</div>
+      <div class="mvv-text">Conectar a cada persona con el sabor que mejor representa su personalidad, convirtiendo una visita a la heladería en una experiencia de autoconocimiento genuino y memorable.</div>
+    </div>
+    <div class="mvv-card">
+      <div class="mvv-icon">🔭</div>
+      <div class="mvv-title">Visión</div>
+      <div class="mvv-text">Ser la plataforma de personalización gastronómica más usada en América Latina, transformando cómo las heladerías artesanales conocen y fidelizan a sus clientes.</div>
+    </div>
+    <div class="mvv-card">
+      <div class="mvv-icon">🚀</div>
+      <div class="mvv-title">Objetivo 2026</div>
+      <div class="mvv-text">Llegar a 50 heladerías activas en México con más de 100,000 tests completados, expandiéndonos a Colombia y Argentina en la segunda mitad del año.</div>
+    </div>
+  </div>
+</section>
+
+<!-- VALORES -->
+<section class="values" id="valores">
+  <div class="section-label">Cómo trabajamos</div>
+  <h2 class="section-title">Nuestros valores</h2>
+  <div class="values-list">
+    <div class="value-item">
+      <div class="value-icon">🧠</div>
+      <div><div class="value-name">Psicología con propósito</div><div class="value-desc">Cada pregunta del test está diseñada con base en marcos psicológicos validados. No hacemos entretenimiento vacío — hacemos introspección real.</div></div>
+    </div>
+    <div class="value-item">
+      <div class="value-icon">🍦</div>
+      <div><div class="value-name">Artesanía sobre escala</div><div class="value-desc">Creemos en lo hecho con cuidado. Apoyamos a heladerías que priorizan calidad e ingredientes sobre producción masiva.</div></div>
+    </div>
+    <div class="value-item">
+      <div class="value-icon">✨</div>
+      <div><div class="value-name">Experiencia memorable</div><div class="value-desc">Cada interacción con NIV'Pop debe sentirse especial. El diseño, el lenguaje y el resultado deben sorprender positivamente.</div></div>
+    </div>
+    <div class="value-item">
+      <div class="value-icon">🔒</div>
+      <div><div class="value-name">Privacidad primero</div><div class="value-desc">No vendemos datos. Los resultados del test son del cliente. Nuestra analítica es agregada y anónima por diseño.</div></div>
+    </div>
+    <div class="value-item">
+      <div class="value-icon">🌱</div>
+      <div><div class="value-name">Tecnología accesible</div><div class="value-desc">Construimos herramientas que cualquier heladería pueda usar, sin necesidad de un equipo técnico propio.</div></div>
+    </div>
+    <div class="value-item">
+      <div class="value-icon">🤝</div>
+      <div><div class="value-name">Comunidad sobre competencia</div><div class="value-desc">Las heladerías que usan NIV'Pop forman una red. Compartimos datos de tendencias (anonimizados) para que todas crezcan juntas.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PLANES -->
+<section class="planes" id="planes">
+  <div class="planes-inner">
+    <div class="section-label">Precios transparentes</div>
+    <h2 class="section-title">Elige tu plan</h2>
+    <p style="font-size:15px;color:var(--mid);font-weight:300;margin-top:8px">Sin contratos. Sin sorpresas. Cancela cuando quieras.</p>
+    <div class="planes-grid">
+
+      <!-- STARTER -->
+      <div class="plan">
+        <div class="plan-badge" style="background:#f0f0f0;color:#888">Gratis</div>
+        <div class="plan-name">🆓 Starter</div>
+        <div class="plan-price">$0<small>/mes</small></div>
+        <div class="plan-desc">Para conocer la plataforma</div>
+        <ul class="plan-features">
+          <li>1 kiosco</li>
+          <li>50 tests / mes</li>
+          <li>Dashboard básico</li>
+          <li>Soporte por email</li>
+          <li style="opacity:.3;text-decoration:line-through">Exportar reportes</li>
+          <li style="opacity:.3;text-decoration:line-through">Modo Dúo</li>
+        </ul>
+        <a href="../index.html" class="plan-btn" style="background:#f5f5f5;color:var(--ink)">Empezar gratis</a>
+      </div>
+
+      <!-- PRO -->
+      <div class="plan featured">
+        <div class="plan-badge" style="background:rgba(196,120,106,.25);color:#c4786a">Recomendado</div>
+        <div class="plan-name">⚡ Pro</div>
+        <div class="plan-price">$499<small> MXN/mes</small></div>
+        <div class="plan-desc">Para heladerías activas</div>
+        <ul class="plan-features" style="color:#fff">
+          <li>3 kioscos simultáneos</li>
+          <li>Tests ilimitados</li>
+          <li>Los 3 modos de test</li>
+          <li>Editor de sabores</li>
+          <li>Exportar reportes HTML</li>
+          <li>Dominio propio</li>
+          <li>Soporte prioritario (4h)</li>
+          <li>Sin marca NIV'Pop</li>
+        </ul>
+        <a href="#contacto" class="plan-btn" style="background:var(--accent);color:#fff">Activar Pro</a>
+      </div>
+
+      <!-- MAX -->
+      <div class="plan">
+        <div class="plan-badge" style="background:#d4e2f4;color:#2d5fa0">Más popular</div>
+        <div class="plan-name">🚀 Max</div>
+        <div class="plan-price">$1,299<small> MXN/mes</small></div>
+        <div class="plan-desc">Para negocios en crecimiento</div>
+        <ul class="plan-features">
+          <li>10 kioscos</li>
+          <li>Todo lo del plan Pro</li>
+          <li>API access</li>
+          <li>Reportes PDF semanales</li>
+          <li>Integración WhatsApp</li>
+          <li>Analítica avanzada</li>
+          <li>Soporte express (1h)</li>
+        </ul>
+        <a href="#contacto" class="plan-btn" style="background:var(--ink);color:#fff">Activar Max</a>
+      </div>
+
+      <!-- ENTERPRISE -->
+      <div class="plan">
+        <div class="plan-badge" style="background:#f0e4c0;color:#9a6820">Franquicias</div>
+        <div class="plan-name">🏢 Enterprise</div>
+        <div class="plan-price" style="font-size:22px">A medida</div>
+        <div class="plan-desc">Para cadenas y franquicias</div>
+        <ul class="plan-features">
+          <li>Kioscos ilimitados</li>
+          <li>Todo lo del plan Max</li>
+          <li>Servidor dedicado</li>
+          <li>White-label total</li>
+          <li>SLA 99.9% garantizado</li>
+          <li>Gerente de cuenta</li>
+          <li>Soporte 24/7</li>
+          <li>Facturación anual</li>
+        </ul>
+        <a href="#contacto" class="plan-btn" style="background:#f5f5f5;color:var(--ink)">Contactar ventas</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- EQUIPO -->
+<section class="team" id="equipo">
+  <div class="section-label">Las personas detrás</div>
+  <h2 class="section-title">Nuestro equipo</h2>
+  <div class="team-grid">
+    <div class="team-card">
+      <div class="team-avatar" style="background:#f0d8d0;color:#c4786a">DC</div>
+      <div class="team-name">Daniel Celiz</div>
+      <div class="team-role">Fundador & Desarrollador</div>
+      <div class="team-bio">Desarrollador full-stack y estudiante de ingeniería de software. Creó NIV'Pop combinando su pasión por la psicología y la tecnología artesanal.</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar" style="background:#d4e2f4;color:#2d5fa0">IC</div>
+      <div class="team-name">Ismael Cervantes</div>
+      <div class="team-role">Co-fundador & Backend</div>
+      <div class="team-bio">Especialista en arquitectura de sistemas. Diseña la infraestructura que hace que NIV'Pop sea rápido, seguro y escalable.</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar" style="background:#d4edd8;color:#3d8b5e">PR</div>
+      <div class="team-name">Paul Rivera</div>
+      <div class="team-role">Co-fundador & Diseño</div>
+      <div class="team-bio">Diseñador de experiencias. Define la identidad visual y la experiencia de usuario que hace que cada test se sienta especial y memorable.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section class="contact" id="contacto">
+  <div class="contact-inner">
+    <div>
+      <h2>Hablemos</h2>
+      <p>¿Tienes una heladería y quieres conocer NIV'Pop? ¿Quieres explorar alianzas o tienes preguntas sobre los planes? Estamos aquí.</p>
+      <div class="contact-items">
+        <div class="ci"><div class="ci-icon">📧</div><div><div class="ci-label">Email</div><div class="ci-val">hola@nivpop.mx</div></div></div>
+        <div class="ci"><div class="ci-icon">📱</div><div><div class="ci-label">WhatsApp</div><div class="ci-val">+52 664 123 4567</div></div></div>
+        <div class="ci"><div class="ci-icon">📍</div><div><div class="ci-label">Ubicación</div><div class="ci-val">Tijuana, Baja California · México</div></div></div>
+        <div class="ci"><div class="ci-icon">🕐</div><div><div class="ci-label">Horario de atención</div><div class="ci-val">Lun–Vie · 9:00–18:00 hrs</div></div></div>
+      </div>
+    </div>
+    <form class="contact-form" onsubmit="submitContact(event)">
+      <div class="cf-field"><label>Tu nombre</label><input type="text" id="cf_name" placeholder="Nombre del responsable" required></div>
+      <div class="cf-field"><label>Nombre de la heladería</label><input type="text" id="cf_business" placeholder="Mi Heladería"></div>
+      <div class="cf-field"><label>Email</label><input type="email" id="cf_email" placeholder="correo@tuheladeria.mx" required></div>
+      <div class="cf-field"><label>¿En qué podemos ayudarte?</label>
+        <textarea id="cf_msg" placeholder="Cuéntanos sobre tu heladería y qué te interesa de NIV'Pop..." required></textarea>
+      </div>
+      <button type="submit" class="cf-submit" id="cfBtn">Enviar mensaje →</button>
+      <div id="cfSuccess" style="display:none;padding:14px;background:rgba(61,139,94,.15);border-radius:8px;color:#3d8b5e;font-size:13px;text-align:center">
+        ✅ Mensaje enviado. Te contactaremos en menos de 24 horas.
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">NIV<span style="color:#c4786a">'</span>POP</div>
+  <div class="footer-links">
+    <a href="../index.html">Kiosco</a>
+    <a href="dashboard.html">Admin</a>
+    <a href="#mision">Quiénes somos</a>
+    <a href="#contacto">Contacto</a>
+  </div>
+  <div class="footer-copy">© 2026 NIV'Pop · Todos los derechos reservados</div>
+</footer>
+
+<script>
+function submitContact(e){
+  e.preventDefault();
+  const btn = document.getElementById('cfBtn');
+  btn.textContent = 'Enviando...';
+  btn.disabled = true;
+  setTimeout(()=>{
+    btn.style.display = 'none';
+    document.getElementById('cfSuccess').style.display = 'block';
+  }, 1500);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NIV'Pop — Kiosco</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/kiosk.css">
+</head>
+<body>
+<!-- Botón admin flotante -->
+<!-- Admin PIN Modal -->
+<div id="adminPinModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:99998;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:16px;padding:32px;width:300px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3)">
+    <div style="font-size:32px;margin-bottom:12px">🔐</div>
+    <div style="font-family:'Outfit',sans-serif;font-size:18px;font-weight:600;margin-bottom:6px">Acceso Admin</div>
+    <div style="font-size:13px;color:#888;margin-bottom:20px">Ingresa tu PIN de administrador</div>
+    <div style="display:flex;justify-content:center;gap:10px;margin-bottom:16px" id="pinDots">
+      <div style="width:12px;height:12px;border-radius:50%;background:#e0e0e0;transition:.2s" id="pd0"></div>
+      <div style="width:12px;height:12px;border-radius:50%;background:#e0e0e0;transition:.2s" id="pd1"></div>
+      <div style="width:12px;height:12px;border-radius:50%;background:#e0e0e0;transition:.2s" id="pd2"></div>
+      <div style="width:12px;height:12px;border-radius:50%;background:#e0e0e0;transition:.2s" id="pd3"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px">
+      <button onclick="pinInput('1')" style="padding:14px;border:1px solid #e0e0e0;border-radius:8px;font-size:18px;font-weight:600;background:#fff;cursor:pointer;font-family:'Outfit',sans-serif;transition:.15s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='#fff'">1</button><button onclick="pinInput('2')" style="padding:14px;border:1px solid #e0e0e0;border-radius:8px;font-size:18px;font-weight:600;background:#fff;cursor:pointer;font-family:'Outfit',sans-serif;transition:.15s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='#fff'">2</button><button onclick="pinInput('3')" style="padding:14px;border:1px solid #e0e0e0;border-radius:8px;font-size:18px;font-weight:600;background:#fff;cursor:pointer;font-family:'Outfit',sans-serif;transition:.15s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='#fff'">3</button><button onclick="pinInput('4')" style="padding:14px;border:1px solid #e0e0e0;border-radius:8px;font-size:18px;font-weight:600;background:#fff;cursor:pointer;font-family:'Outfit',sans-serif;transition:.15s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='#fff'">4</button><button onclick="pinInput('5')" style="padding:14px;border:1px solid #e0e0e0;border-radius:8px;font-size:18px;font-weight:600;background:#fff;cursor:pointer;font-family:'Outfit',sans-serif;transition:.15s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='#fff'">5</button><button onclick="pinInput('6')" style="padding:14px;border:1px solid #e0e0e0;border-radius:8px;font-size:18px;font-weight:600;background:#fff;cursor:pointer;font-family:'Outfit',sans-serif;transition:.15s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='#fff'">6</button><button onclick="pinInput('7')" style="padding:14px;border:1px solid #e0e0e0;border-radius:8px;font-size:18px;font-weight:600;background:#fff;cursor:pointer;font-family:'Outfit',sans-serif;transition:.15s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='#fff'">7</button><button onclick="pinInput('8')" style="padding:14px;border:1px solid #e0e0e0;border-radius:8px;font-size:18px;font-weight:600;background:#fff;cursor:pointer;font-family:'Outfit',sans-serif;transition:.15s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='#fff'">8</button><button onclick="pinInput('9')" style="padding:14px;border:1px solid #e0e0e0;border-radius:8px;font-size:18px;font-weight:600;background:#fff;cursor:pointer;font-family:'Outfit',sans-serif;transition:.15s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='#fff'">9</button><button onclick="pinInput('')" style="padding:14px;border:1px solid #e0e0e0;border-radius:8px;font-size:18px;font-weight:600;background:#fff;cursor:pointer;font-family:'Outfit',sans-serif;transition:.15s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='#fff'"></button><button onclick="pinInput('0')" style="padding:14px;border:1px solid #e0e0e0;border-radius:8px;font-size:18px;font-weight:600;background:#fff;cursor:pointer;font-family:'Outfit',sans-serif;transition:.15s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='#fff'">0</button><button onclick="pinInput('⌫')" style="padding:14px;border:1px solid #e0e0e0;border-radius:8px;font-size:18px;font-weight:600;background:#fff;cursor:pointer;font-family:'Outfit',sans-serif;transition:.15s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='#fff'">⌫</button>
+    </div>
+    <div id="pinError" style="color:#c4786a;font-size:12px;min-height:18px"></div>
+    <button onclick="closePinModal()" style="margin-top:8px;padding:8px 20px;border:1px solid #e0e0e0;border-radius:8px;font-family:'Outfit',sans-serif;font-size:13px;cursor:pointer;background:#fff">Cancelar</button>
+  </div>
+</div>
+<button id="adminBtn" onclick="openPinModal()" style="position:fixed;top:16px;right:16px;z-index:9999;display:flex;align-items:center;gap:6px;padding:8px 14px;background:rgba(22,18,13,.5);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.08);border-radius:20px;color:rgba(255,255,255,.25);font-size:11px;font-family:'Outfit',sans-serif;font-weight:500;letter-spacing:.5px;cursor:pointer;transition:all .2s" onmouseover="this.style.color='rgba(255,255,255,.5)'" onmouseout="this.style.color='rgba(255,255,255,.25)'">
+  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+  ···
+</button>
+<nav class="web-only">
+  <div class="nav-inner">
+    <div class="nav-logo" onclick="scrollTo(0,0)">NIV<span>'</span>POP</div>
+    <div class="nav-links">
+      <button class="nav-link" onclick="scrollTo(0,0)">Inicio</button>
+      <button class="nav-link" onclick="scrollById('modos')">Modos</button>
+      <button class="nav-link" onclick="scrollById('sabores')">Sabores</button>
+      <button class="nav-link" onclick="scrollById('sobre')">Nosotros</button>
+    </div>
+    <button class="nav-cta" onclick="launchKiosco()">Modo Kiosco ↗</button>
+  </div>
+  <a href="pages/about.html" target="_blank" style="font-size:12px;color:rgba(22,18,13,.4);text-decoration:none;display:flex;align-items:center;gap:4px;transition:color .15s" onmouseover="this.style.color='var(--ink)'" onmouseout="this.style.color='rgba(22,18,13,.4)'">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      Quiénes somos
+    </a>
+  </nav>
+
+<div class="hero web-only">
+  <span class="hero-eye">Psicología del sabor · Artesanía heladera</span>
+  <h1 class="hero-title">NIV<span style="color:var(--rose2)">'</span>POP</h1>
+  <p class="hero-sub">Descubre qué nieve eres. Un test diseñado para revelar tu personalidad a través del sabor.</p>
+  <div class="hero-btns">
+    <button class="hbtn hbtn-ink" onclick="launchKiosco()">Comenzar el test</button>
+    <button class="hbtn hbtn-out" onclick="scrollById('modos')">Explorar modos</button>
+  </div>
+  <div class="hero-scroll-line"></div>
+</div>
+
+<div class="section web-only" id="modos">
+  <span class="sec-eye">Cuatro experiencias</span>
+  <h2 class="sec-h">Elige cómo <em>descubrirte</em></h2>
+  <div class="sec-rule"></div>
+  <p class="sec-lead">Cada modo revela algo distinto. El mismo sabor puede sorprenderte de maneras diferentes.</p>
+  <div class="modes-grid">
+    <div class="mc" onclick="launchKiosco('solo-p')">
+      <span class="mc-icon">🍦</span>
+      <div class="mc-title">¿Qué nieve eres?</div>
+      <div class="mc-desc">13 preguntas sobre tu personalidad. Tu sabor único, tu ticket para canjear.</div>
+      <span class="mc-badge">Personalidad · 13 preguntas</span>
+    </div>
+    <div class="mc" onclick="launchKiosco('solo-t')">
+      <span class="mc-icon">🌤</span>
+      <div class="mc-title">¿Cómo te sientes hoy?</div>
+      <div class="mc-desc">9 preguntas sobre tu estado de ánimo. Tu nieve cambia según el día.</div>
+      <span class="mc-badge">Estado de ánimo · 9 preguntas</span>
+    </div>
+    <div class="mc" onclick="launchKiosco('duo')">
+      <span class="mc-icon">🍧</span>
+      <div class="mc-title">Su sabor compartido</div>
+      <div class="mc-desc">Para dos personas. El sabor que define su vínculo — pareja, amigos, familia...</div>
+      <span class="mc-badge">Modo Dúo · 10 preguntas</span>
+    </div>
+    <div class="mc" onclick="scrollById('sabores')">
+      <span class="mc-icon">📖</span>
+      <div class="mc-title">Catálogo de sabores</div>
+      <div class="mc-desc">Los 16 sabores con perfiles psicológicos, bases y alérgenos.</div>
+      <span class="mc-badge">Referencia · 16 sabores</span>
+    </div>
+  </div>
+</div>
+
+<div class="cat-wrap" id="sabores">
+  <div class="cat-inner">
+    <span class="sec-eye">Todos los sabores</span>
+    <h2 class="sec-h">Catálogo <em>completo</em></h2>
+    <div class="sec-rule"></div>
+    <p class="sec-lead" style="margin-bottom:28px">Explora los 16 perfiles. Cada sabor es una forma de ser.</p>
+    <div class="filter-row" id="filterRow">
+      <button class="fpill on" onclick="filterF('all',this)">Todos</button>
+      <button class="fpill" onclick="filterF('agua',this)">Base agua</button>
+      <button class="fpill" onclick="filterF('leche',this)">Base leche</button>
+      <button class="fpill" onclick="filterF('sin-lacteos',this)">Sin lácteos</button>
+      <button class="fpill" onclick="filterF('sin-frutos',this)">Sin frutos secos</button>
+    </div>
+    <div class="flavors-grid" id="flavorsGrid"></div>
+  </div>
+</div>
+
+<div class="section web-only" id="sobre">
+  <div class="sobre-grid">
+    <div>
+      <span class="sec-eye">Sobre NIV'Pop</span>
+      <h2 class="sec-h">Más que una <em>nieve</em></h2>
+      <div class="sec-rule"></div>
+      <p style="font-family:var(--fs);font-size:14px;color:var(--mid);line-height:1.9;font-weight:300;margin-bottom:14px">NIV'Pop nació de una idea simple: que el sabor que eliges dice algo de ti. Combinamos psicología del comportamiento con artesanía heladera para crear una experiencia que va más allá de lo que comes.</p>
+      <p style="font-family:var(--fs);font-size:14px;color:var(--mid);line-height:1.9;font-weight:300">Cada perfil está construido sobre teorías psicológicas reales — del modelo de los Cinco Grandes hasta el trabajo de Brené Brown, Elaine Aron y John Bowlby — traducidas en algo delicioso.</p>
+    </div>
+    <div class="sobre-stat">
+      <div class="sobre-stat-n" style="color:var(--paper)">16</div>
+      <div class="sobre-stat-l">sabores únicos</div>
+      <div class="sobre-stat-n" style="color:var(--rose2)">4</div>
+      <div class="sobre-stat-l">modos de descubrimiento</div>
+    </div>
+  </div>
+</div>
+
+<footer class="web-only">
+  <div class="foot-inner">
+    <div class="foot-logo">NIV<span>'</span>POP</div>
+    <div class="foot-tag">Un sabor para cada quien</div>
+    <div class="foot-note">
+      Los perfiles psicológicos son orientativos y tienen fines de entretenimiento. La información de alérgenos puede variar — consulta siempre con el equipo de NIV'Pop antes de consumir.<br><br>
+      © 2025 NIV'Pop — Todos los derechos reservados.
+    </div>
+  </div>
+</footer>
+
+<div id="kiosco-overlay">
+  <div class="k-topbar">
+    <div class="k-topbar-logo">NIV<span>'</span>POP</div>
+    <div class="k-topbar-step" id="kStep"></div>
+    <button class="k-exit" onclick="kExit()">✕ Salir</button>
+  </div>
+  <div class="k-screens">
+
+    <!-- WELCOME -->
+    <div class="ks active" id="ks-welcome" onclick="kGo('mode')">
+      <div style="padding:36px 24px;text-align:center">
+        <div class="kw-logo">NIV<span>'</span>POP</div>
+        <div class="kw-sub">Descubre tu nieve ideal</div>
+        <div class="kw-tap">Toca para comenzar</div>
+      </div>
+    </div>
+
+    <!-- MODE -->
+    <div class="ks" id="ks-mode">
+      <div class="kpage fu">
+        <span class="k-over">Bienvenido</span>
+        <h2 class="k-title">¿Cómo quieres <em>descubrir</em> tu nieve?</h2>
+        <div class="k-rule"></div>
+        <div class="k-modes">
+          <div class="kmc" onclick="kGo('name-p')"><span class="kmc-icon">🍦</span><div class="kmc-title">¿Qué nieve eres?</div><div class="kmc-desc">13 preguntas de personalidad</div></div>
+          <div class="kmc" onclick="kGo('name-t')"><span class="kmc-icon">🌤</span><div class="kmc-title">¿Cómo te sientes hoy?</div><div class="kmc-desc">9 preguntas de estado de ánimo</div></div>
+          <div class="kmc" onclick="kGo('duo-names')"><span class="kmc-icon">🍧</span><div class="kmc-title">Su sabor compartido</div><div class="kmc-desc">Modo Dúo — para dos personas</div></div>
+          <div class="kmc" onclick="kExit();setTimeout(()=>scrollById('sabores'),250)"><span class="kmc-icon">📖</span><div class="kmc-title">Ver todos los sabores</div><div class="kmc-desc">Catálogo completo</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NAME P -->
+    <div class="ks" id="ks-name-p">
+      <button class="k-back" onclick="kGo('mode')"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg>Regresar</button>
+      <div class="kpage fu">
+        <span class="k-over">Test de personalidad</span>
+        <h2 class="k-title">¿Cómo te <em>llamamos?</em></h2>
+        <div class="k-rule"></div>
+        <p class="k-lead">Tu nombre aparecerá en tu resultado y en tu ticket.</p>
+        <input class="k-inp" id="nameP" type="text" placeholder="Escribe tu nombre" maxlength="24" autocomplete="off">
+        <button class="kb kb-ink" onclick="startSolo('p')">Comenzar el test</button>
+        <button class="kb kb-ghost" onclick="kGo('mode')">Regresar</button>
+      </div>
+    </div>
+
+    <!-- NAME T -->
+    <div class="ks" id="ks-name-t">
+      <button class="k-back" onclick="kGo('mode')"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg>Regresar</button>
+      <div class="kpage fu">
+        <span class="k-over">Estado de ánimo</span>
+        <h2 class="k-title">¿Cómo te <em>sientes hoy?</em></h2>
+        <div class="k-rule"></div>
+        <p class="k-lead">Tu nombre aparecerá en tu resultado y en tu ticket.</p>
+        <input class="k-inp" id="nameT" type="text" placeholder="Escribe tu nombre" maxlength="24" autocomplete="off">
+        <button class="kb kb-ink" onclick="startSolo('t')">Comenzar</button>
+        <button class="kb kb-ghost" onclick="kGo('mode')">Regresar</button>
+      </div>
+    </div>
+
+    <!-- DUO NAMES -->
+    <div class="ks ks-scroll" id="ks-duo-names">
+      <button class="k-back" onclick="kGo('mode')"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg>Regresar</button>
+      <div class="kpage fu" style="padding-top:64px;max-width:620px">
+        <span class="k-over">Modo Dúo</span>
+        <h2 class="k-title">¿Quiénes <em>participan?</em></h2>
+        <div class="k-rule"></div>
+        <p class="k-lead" style="margin-bottom:16px">Escriban sus nombres y elijan su vínculo.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;width:100%">
+          <div><div style="font-family:var(--fs);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--light);margin-bottom:6px">Persona 1</div><input class="k-inp" id="dN1" style="font-size:18px;margin-bottom:0" type="text" placeholder="Nombre" maxlength="18" autocomplete="off"></div>
+          <div><div style="font-family:var(--fs);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--light);margin-bottom:6px">Persona 2</div><input class="k-inp" id="dN2" style="font-size:18px;margin-bottom:0" type="text" placeholder="Nombre" maxlength="18" autocomplete="off"></div>
+        </div>
+        <span class="k-over" style="text-align:left;display:block;margin-bottom:10px">¿Cuál es su vínculo?</span>
+        <div class="k-vin-grid">
+          <div class="kvc" id="kv-pareja" onclick="kSelV('pareja')"><span class="kvc-icon">💑</span><div class="kvc-lbl">Pareja</div></div>
+          <div class="kvc" id="kv-amigos" onclick="kSelV('amigos')"><span class="kvc-icon">🫂</span><div class="kvc-lbl">Amigos</div></div>
+          <div class="kvc" id="kv-hermanos" onclick="kSelV('hermanos')"><span class="kvc-icon">👫</span><div class="kvc-lbl">Hermanos</div></div>
+          <div class="kvc" id="kv-familia" onclick="kSelV('familia')"><span class="kvc-icon">🏠</span><div class="kvc-lbl">Familia</div></div>
+          <div class="kvc" id="kv-colegas" onclick="kSelV('colegas')"><span class="kvc-icon">🤝</span><div class="kvc-lbl">Colegas</div></div>
+          <div class="kvc" id="kv-otro" onclick="kSelV('otro')"><span class="kvc-icon">✨</span><div class="kvc-lbl">Otro</div></div>
+        </div>
+        <button class="kb kb-ink" onclick="startDuo()">Comenzar juntos</button>
+        <button class="kb kb-ghost" onclick="kGo('mode')">Regresar</button>
+      </div>
+    </div>
+
+    <!-- QUIZ SOLO -->
+    <div class="ks" id="ks-quiz">
+      <button class="k-back" onclick="goBack('solo')"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg>Regresar</button>
+      <div class="k-quiz-wrap" id="kQW">
+        <div class="kqp"><div class="kqf" id="kqFill"></div></div>
+        <div class="kq-meta"><span id="kqLabel"></span><span id="kqCount"></span></div>
+        <div class="kq-hi" id="kqHi"></div>
+        <div class="kq-q" id="kqQ"></div>
+        <div class="kq-opts" id="kqOpts"></div>
+      </div>
+    </div>
+
+    <!-- QUIZ DUO -->
+    <div class="ks" id="ks-duo-quiz">
+      <button class="k-back" onclick="goBack('duo')"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg>Regresar</button>
+      <div class="k-duo-banner"><div class="k-duo-names" id="kDBanner"></div><div class="k-duo-type" id="kDType"></div></div>
+      <div class="k-quiz-wrap" style="padding-top:14px" id="kdQW">
+        <div class="kqp"><div class="kqf" id="kdqFill"></div></div>
+        <div class="kq-meta"><span>Modo Dúo</span><span id="kdqCount"></span></div>
+        <div class="kq-q" id="kdqQ"></div>
+        <div class="kq-opts" id="kdqOpts"></div>
+      </div>
+    </div>
+
+    <!-- LOADING SOLO -->
+    <div class="ks k-ld" id="ks-loading">
+      <div class="k-ld-inner fi"><span class="k-ld-over">Analizando</span><div class="k-ld-name" id="klN"></div><div class="k-ld-sub" id="klSub"></div><div class="k-ld-bar"><div class="k-ld-fill" id="klF"></div></div><div class="k-ld-msg" id="klM"></div></div>
+    </div>
+
+    <!-- LOADING DUO -->
+    <div class="ks k-ld" id="ks-duo-loading">
+      <div class="k-ld-inner fi"><span class="k-ld-over">Analizando su vínculo</span><div class="k-ld-name" id="kdlN"></div><div class="k-ld-sub">encontrando su sabor compartido</div><div class="k-ld-bar"><div class="k-ld-fill" id="kdlF"></div></div><div class="k-ld-msg" id="kdlM"></div></div>
+    </div>
+
+    <!-- RESULT SOLO -->
+    <div class="ks ks-scroll" id="ks-result">
+      <button class="k-back" onclick="kGo('mode')" style="z-index:40"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg>Inicio</button>
+      <div class="kr-hero fi" id="krH"><div class="kr-accent"></div><div class="kr-in"><span class="kr-over" id="krO"></span><div class="kr-who" id="krW"></div><div class="kr-name" id="krN"></div><div class="kr-persona" id="krP"></div><div class="kr-desc" id="krD"></div></div></div>
+      <div class="kr-body fi">
+        <div class="kr-grid" id="krTr"></div>
+        <span class="kr-slbl" id="krIT"></span><div class="kr-txt" id="krITx"></div><div class="kr-pull" id="krIH"></div>
+        <div class="kr-rule"></div>
+        <span class="kr-slbl">Base recomendada</span>
+        <div class="kr-bcard"><div class="kr-bopt rec"><span class="kr-blbl">Recomendada</span><div class="kr-bn" id="krBR"></div><div class="kr-bd" id="krBRD"></div></div><div class="kr-bopt"><span class="kr-blbl">Alternativa</span><div class="kr-bn" id="krBA"></div><div class="kr-bd" id="krBAD"></div></div></div>
+        <div class="kr-rule"></div>
+        <span class="kr-slbl">Alérgenos</span><div class="kr-algrid" id="krAl"></div>
+        <p style="font-family:var(--fs);font-size:11px;color:var(--light);margin-bottom:5px;line-height:1.5">Información orientativa. Consulta siempre en caja.</p>
+        <div class="kr-rule"></div>
+        <span class="kr-slbl">Fundamento psicológico</span><div class="kr-txt" id="krPsy"></div>
+        <div class="kr-rule"></div>
+        <span class="kr-slbl">Para ti</span><div id="krTips"></div>
+        <div class="kr-rule"></div>
+        <!-- SHARE SOLO -->
+        <div class="share-block" id="shareSoloBlock">
+          <div class="share-glow" id="shareSoloGlow"></div>
+          <div class="share-inner">
+            <span class="share-label">Tu perfil de nieve</span>
+            <div class="share-flavor-name" id="ssFlavor"></div>
+            <div class="share-flavor-per" id="ssPer"></div>
+            <div class="share-hl" id="ssHl"></div>
+            <div class="share-tag">#NivPop · nivpop.mx</div>
+            <div class="share-btns-row">
+              <button class="sbtn sbtn-ig" onclick="openShare('solo')">📸 Compartir en Instagram</button>
+              <button class="sbtn sbtn-tk" onclick="openShare('solo')">🎵 TikTok</button>
+              <button class="sbtn sbtn-copy" id="ssCopyBtn" onclick="copyShareText('solo')">📋 Copiar texto</button>
+            </div>
+          </div>
+        </div>
+        <div class="kr-rule"></div>
+        <div class="k-tcta"><span class="k-tclbl">Ya estás listo/a</span><div class="k-tctitle" id="krTkN"></div><div class="k-tcsub">Imprime tu ticket y entrégalo en caja</div><button class="kb-ticket" onclick="showTicket('solo')">🎟 Imprimir mi ticket</button></div>
+        <button class="kb kb-ghost" onclick="kGo('mode')" style="margin-top:8px">Volver al inicio</button><br>
+      </div>
+    </div>
+
+    <!-- RESULT DUO -->
+    <div class="ks ks-scroll" id="ks-duo-result">
+      <button class="k-back" onclick="kGo('mode')" style="z-index:40"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg>Inicio</button>
+      <div class="kr-hero fi" id="kdrH"><div class="kr-accent"></div><div class="kr-in"><span class="kr-over" id="kdrO"></span><div class="kr-who" id="kdrW"></div><span class="kr-alliance" id="kdrAll"></span><div class="kr-name" id="kdrN"></div><div class="kr-persona" id="kdrP"></div><div class="kr-desc" id="kdrD"></div></div></div>
+      <div class="kr-body fi">
+        <div class="kr-grid" id="kdrTr"></div>
+        <span class="kr-slbl" id="kdrIT"></span><div class="kr-txt" id="kdrITx"></div><div class="kr-pull" id="kdrIH"></div>
+        <div class="kr-rule"></div>
+        <div class="k-ctip"><span class="k-ctlbl">Tip de conexión</span><div class="k-ctxt" id="kdrTip"></div></div>
+        <div class="kr-rule"></div>
+        <span class="kr-slbl">Base recomendada</span>
+        <div class="kr-bcard"><div class="kr-bopt rec"><span class="kr-blbl">Recomendada</span><div class="kr-bn" id="kdrBR"></div><div class="kr-bd" id="kdrBRD"></div></div><div class="kr-bopt"><span class="kr-blbl">Alternativa</span><div class="kr-bn" id="kdrBA"></div><div class="kr-bd" id="kdrBAD"></div></div></div>
+        <div class="kr-rule"></div>
+        <span class="kr-slbl">Alérgenos</span><div class="kr-algrid" id="kdrAl"></div>
+        <p style="font-family:var(--fs);font-size:11px;color:var(--light);margin-bottom:5px;line-height:1.5">Información orientativa. Consulta siempre en caja.</p>
+        <div class="kr-rule"></div>
+        <!-- COMPAT METER -->
+        <div class="compat-wrap">
+          <span class="compat-header">💞 Compatibilidad de sabores</span>
+          <div class="compat-ring-wrap">
+            <svg width="124" height="124" viewBox="0 0 124 124">
+              <circle class="compat-bg-ring" cx="62" cy="62" r="53"/>
+              <circle class="compat-fill-ring" id="compatRing" cx="62" cy="62" r="53" stroke="#c4786a" stroke-dasharray="333" stroke-dashoffset="333"/>
+            </svg>
+            <div class="compat-num"><span class="compat-pct" id="compatPct">—</span><span class="compat-pct-sign">%</span></div>
+          </div>
+          <div class="compat-verdict" id="compatVerdict"></div>
+          <div class="compat-verdict-desc" id="compatDesc"></div>
+          <div class="compat-flavors-row">
+            <span class="compat-fl" id="compatF1"></span>
+            <span class="compat-vs-badge">vs</span>
+            <span class="compat-fl" id="compatF2"></span>
+          </div>
+        </div>
+        <!-- SHARE DUO -->
+        <div class="share-block" id="shareDuoBlock">
+          <div class="share-glow" id="shareDuoGlow"></div>
+          <div class="share-inner">
+            <span class="share-label">Su sabor compartido</span>
+            <div class="share-flavor-name" id="sdFlavor"></div>
+            <div class="share-flavor-per" id="sdAlliance"></div>
+            <div class="share-hl" id="sdHl"></div>
+            <div class="share-tag" id="sdCompat"></div>
+            <div style="font-family:var(--fs);font-size:9px;letter-spacing:1.5px;color:rgba(255,255,255,.2);margin-bottom:10px">#NivPop · nivpop.mx</div>
+            <div class="share-btns-row">
+              <button class="sbtn sbtn-ig" onclick="openShare('duo')">📸 Compartir en Instagram</button>
+              <button class="sbtn sbtn-tk" onclick="openShare('duo')">🎵 TikTok</button>
+              <button class="sbtn sbtn-copy" id="sdCopyBtn" onclick="copyShareText('duo')">📋 Copiar texto</button>
+            </div>
+          </div>
+        </div>
+        <div class="kr-rule"></div>
+        <div class="k-tcta"><span class="k-tclbl">¡Listos los dos!</span><div class="k-tctitle" id="kdrTkN"></div><div class="k-tcsub">Impriman su ticket y entréguenlo en caja</div><button class="kb-ticket" onclick="showTicket('duo')">🎟 Imprimir nuestro ticket</button></div>
+        <button class="kb kb-ghost" onclick="kGo('mode')" style="margin-top:8px">Volver al inicio</button><br>
+      </div>
+    </div>
+
+    <!-- TICKET SOLO -->
+    <div class="ks" id="ks-ticket">
+      <div class="k-tk-topbar">
+        <button class="k-back" style="position:static;background:transparent;border:1px solid var(--mid);color:var(--mid)" onclick="kGo('result')"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg>Ver resultado</button>
+        <span style="font-family:var(--fd);font-size:13px;color:var(--paper)">Tu ticket</span>
+        <button class="kb kb-rose" onclick="printAndReturn()" style="width:auto;margin:0;padding:9px 16px;font-size:10px;min-height:auto">🖨 Imprimir</button>
+      </div>
+      <div class="k-tk-area">
+        <div class="tk">
+          <div class="tk-hdr"><div class="tk-logo">NIV<span>'</span>POP</div><div class="tk-tagline">Descubre tu nieve ideal</div></div>
+          <div class="tk-sec"><div class="tk-lbl">Cliente</div><div class="tk-val big acc" id="tkN"></div><div class="tk-lbl" style="margin-top:5px">Fecha</div><div class="tk-val" style="font-size:11px" id="tkDate"></div></div>
+          <div class="tk-sec"><div class="tk-lbl" id="tkMlbl">Tu nieve es</div><div class="tk-val big" id="tkF"></div><div class="tk-sub" id="tkPer"></div></div>
+          <div class="tk-sec"><span class="tk-hl-mark">Tu frase</span><div class="tk-hl" id="tkHL"></div></div>
+          <div class="tk-sec"><div class="tk-lbl">Base recomendada</div><div style="font-family:var(--fs);font-size:10px;font-weight:600;color:var(--ink);margin-top:2px" id="tkBase"></div><div style="font-family:var(--fs);font-size:9px;color:var(--mid);line-height:1.4;margin-top:1px" id="tkBaseN"></div></div>
+          <div class="tk-sec"><div class="tk-lbl">Alérgenos</div><div class="tk-al-row" id="tkAl"></div><div style="font-family:var(--fs);font-size:8px;color:var(--light);margin-top:4px">Consulta siempre en caja.</div></div>
+          <div class="tk-div">✦ ✦ ✦</div>
+          <div class="tk-sec" style="border-bottom:none"><div class="tk-lbl">Folio</div><div class="tk-val" style="font-size:11px;font-family:monospace;letter-spacing:2px" id="tkFolio"></div></div>
+          <div class="tk-foot"><div class="tk-foot-txt">Presenta este ticket en caja<br>para recibir tu nieve<br><br><strong>NIV'Pop</strong> — un sabor para cada quien</div><span class="tk-bc" id="tkBC"></span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TICKET DUO -->
+    <div class="ks" id="ks-duo-ticket">
+      <div class="k-tk-topbar">
+        <button class="k-back" style="position:static;background:transparent;border:1px solid var(--mid);color:var(--mid)" onclick="kGo('duo-result')"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg>Ver resultado</button>
+        <span style="font-family:var(--fd);font-size:13px;color:var(--paper)">Ticket Dúo</span>
+        <button class="kb kb-rose" onclick="printAndReturn()" style="width:auto;margin:0;padding:9px 16px;font-size:10px;min-height:auto">🖨 Imprimir</button>
+      </div>
+      <div class="k-tk-area">
+        <div class="tk">
+          <div class="tk-hdr"><div class="tk-logo">NIV<span>'</span>POP</div><div class="tk-tagline">Su sabor compartido</div></div>
+          <div class="tk-sec"><div class="tk-lbl" id="dkVlbl"></div><div class="tk-val big acc" id="dkNames"></div><div class="tk-lbl" style="margin-top:5px">Fecha</div><div class="tk-val" style="font-size:11px" id="dkDate"></div></div>
+          <div class="tk-sec"><div class="tk-lbl">Su nieve compartida</div><div class="tk-val big" id="dkF"></div><div class="tk-sub" id="dkAll"></div></div>
+          <div class="tk-sec"><span class="tk-hl-mark">Su frase</span><div class="tk-hl" id="dkHL"></div></div>
+          <div class="tk-sec"><div class="tk-lbl">Base recomendada</div><div style="font-family:var(--fs);font-size:10px;font-weight:600;color:var(--ink);margin-top:2px" id="dkBase"></div><div style="font-family:var(--fs);font-size:9px;color:var(--mid);line-height:1.4;margin-top:1px" id="dkBaseN"></div></div>
+          <div class="tk-sec"><div class="tk-lbl">Alérgenos</div><div class="tk-al-row" id="dkAl"></div><div style="font-family:var(--fs);font-size:8px;color:var(--light);margin-top:4px">Consulta siempre en caja.</div></div>
+          <div class="tk-div">✦ ✦ ✦</div>
+          <div class="tk-sec" style="border-bottom:none"><div class="tk-lbl">Folio</div><div class="tk-val" style="font-size:11px;font-family:monospace;letter-spacing:2px" id="dkFolio"></div></div>
+          <div class="tk-foot"><div class="tk-foot-txt">Presenten este ticket en caja<br>para recibir su nieve compartida<br><br><strong>NIV'Pop</strong> — un sabor para cada vínculo</div><span class="tk-bc" id="dkBC"></span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<!-- SHARE CARD OVERLAY -->
+<div id="shareOverlay">
+  <canvas id="shareCanvas" width="1080" height="1920"></canvas>
+  <div class="sov-btns">
+    <button class="sov-btn sov-save" onclick="downloadShare()">⬇ Guardar</button>
+    <button class="sov-btn sov-ig" onclick="shareNative('ig')">📸 Instagram</button>
+    <button class="sov-btn sov-tk" onclick="shareNative('tk')">🎵 TikTok</button>
+    <button class="sov-btn sov-close" onclick="closeShare()">✕ Cerrar</button>
+  </div>
+</div>
+  <!-- Shared data layer — must load first -->
+  <script src="js/db.js"></script>
+  <!-- Kiosk logic -->
+  <script src="js/kiosk.js"></script>
+</body>
+</html>
