@@ -439,7 +439,8 @@ function calcCompat(s1,s2){
 let lastCompat=0;
 function populateCompat(pct){
   lastCompat=pct;
-  document.getElementById('compatPct').textContent=pct;
+  const compatEl=document.getElementById('compatPct');
+  if(compatEl) compatEl.textContent=pct;
   // Animate ring: circumference = 2π×53 ≈ 333
   const circumference=333;
   const offset=circumference-(pct/100*circumference);
@@ -470,6 +471,7 @@ const FLAVOR_EMOJI={fresa:'🍓',vainilla:'🍦',menta:'🌿',choco:'🍫',mango
 function openShare(mode){
   shareMode=mode;
   const canvas=document.getElementById('shareCanvas');
+  if(!canvas) return;
   const ctx=canvas.getContext('2d');
   canvas.width=1080; canvas.height=1920;
   if(mode==='solo') drawSoloCard(ctx,canvas);
@@ -662,6 +664,7 @@ function drawDuoCard(ctx,canvas){
 
 function downloadShare(){
   const canvas=document.getElementById('shareCanvas');
+  if(!canvas) return;
   const a=document.createElement('a');
   a.href=canvas.toDataURL('image/png');
   a.download=shareMode==='solo'?`nivpop-${rKey}.png`:`nivpop-duo-${dRKey}.png`;
@@ -669,6 +672,7 @@ function downloadShare(){
 }
 async function shareNative(target){
   const canvas=document.getElementById('shareCanvas');
+  if(!canvas) return;
   const txt=shareMode==='solo'
     ?`🍦 Mi perfil de nieve es: ${F[rKey]?.name}\n${F[rKey]?.persona}\n"${F[rKey]?.ins.hl}"\n\nDescubre el tuyo 👉 #NivPop`
     :`💞 Nuestro sabor compartido: ${F[dRKey]?.name}\n${DUO_ALL[dRKey]||''}\nCompatibilidad: ${lastCompat}%\n\n${dN1} & ${dN2}\n#NivPop #SaborCompartido`;
@@ -695,13 +699,14 @@ function copyShareText(mode){
   if(mode==='solo'){
     txt=`🍦 Mi perfil de nieve es:\n\n${FLAVOR_EMOJI[rKey]||'🍦'} ${f.name}\n${f.persona}\n\n"${f.ins.hl}"\n\n¿Cuál eres tú? 👉 #NivPop`;
   } else {
-    const k1=Object.entries(scores).sort((a,b)=>b[1]-a[1])[0][0];
-    const k2=Object.entries(dScores).sort((a,b)=>b[1]-a[1])[0][0];
+    const k1=Object.entries(dScores1).sort((a,b)=>b[1]-a[1])[0][0];
+    const k2=Object.entries(dScores2).sort((a,b)=>b[1]-a[1])[0][0];
     txt=`💞 Nuestra compatibilidad de nieve:\n\n${dN1}: ${FLAVOR_EMOJI[k1]||'🍦'} ${F[k1]?.name||''}\n${dN2}: ${FLAVOR_EMOJI[k2]||'🍦'} ${F[k2]?.name||''}\n\nNuestro sabor compartido: ${f.name}\n${DUO_ALL[dRKey]||''}\nCompatibilidad: ${lastCompat}%\n\n#NivPop #SaborCompartido`;
   }
   const btnId=mode==='solo'?'ssCopyBtn':'sdCopyBtn';
   navigator.clipboard.writeText(txt).then(()=>{
     const btn=document.getElementById(btnId);
+    if(!btn) return;
     btn.textContent='✓ Copiado';
     btn.classList.add('done');
     setTimeout(()=>{btn.textContent='📋 Copiar texto';btn.classList.remove('done');},2200);
@@ -710,9 +715,9 @@ function copyShareText(mode){
 
 // ════════ INIT ════════
 buildCatalog();
-document.getElementById('nameP').addEventListener('keydown',e=>{if(e.key==='Enter')startSolo('p');});
-document.getElementById('nameT').addEventListener('keydown',e=>{if(e.key==='Enter')startSolo('t');});
-document.getElementById('dN2').addEventListener('keydown',e=>{if(e.key==='Enter')startDuo();});
+document.getElementById('nameP')?.addEventListener('keydown',e=>{if(e.key==='Enter')startSolo('p');});
+document.getElementById('nameT')?.addEventListener('keydown',e=>{if(e.key==='Enter')startSolo('t');});
+document.getElementById('dN2')?.addEventListener('keydown',e=>{if(e.key==='Enter')startDuo();});
 
 // ════════ IMPRIMIR + REGRESAR AL INICIO ════════
 function printAndReturn() {

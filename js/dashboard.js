@@ -1161,7 +1161,7 @@ window.selectPayMethod = function(el, method){
   if(method === 'tarjeta'){
     // Restaurar formulario de tarjeta
     cardForm.style.display = 'flex';
-    cardForm.style.flexDirection = 'flex';
+    cardForm.style.flexDirection = 'column';
     if(!document.getElementById('pay_card')){
       cardForm.innerHTML = `
         <div class="field"><label>Número de tarjeta</label><input id="pay_card" type="text" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCard(this)"></div>
