@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="80" fill="#16120d"/>
+  <!-- Ice cream cone shape -->
+  <path d="M256 80 C200 80 160 120 160 175 C160 210 180 240 210 255 L185 395 C183 408 194 420 207 420 L305 420 C318 420 329 408 327 395 L302 255 C332 240 352 210 352 175 C352 120 312 80 256 80Z" fill="#c4786a" opacity="0.9"/>
+  <!-- Cone stripes -->
+  <path d="M210 255 L302 255 L327 395 L185 395Z" fill="#b49450" opacity="0.85"/>
+  <!-- Highlight -->
+  <circle cx="225" cy="145" r="22" fill="white" opacity="0.18"/>
+  <!-- N letter -->
+  <text x="256" y="178" font-family="Georgia, serif" font-size="100" font-weight="600" fill="white" text-anchor="middle" opacity="0.0">N</text>
+</svg>

@@ -1,0 +1,15 @@
+{
+  "name": "NIV'POP — Kiosco",
+  "short_name": "NIV'POP",
+  "description": "Descubre tu sabor de nieve. Test de personalidad artesanal.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#16120d",
+  "theme_color": "#16120d",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ],
+  "categories": ["food", "lifestyle", "entertainment"]
+}

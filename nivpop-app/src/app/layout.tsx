@@ -17,15 +17,27 @@ const sans = Outfit({
   display: "swap",
 });
 
+import PWARegister from "@/components/PWARegister";
+
 export const metadata: Metadata = {
   title: "NIV'Pop — Kiosco",
   description: "Descubre qué nieve eres. Un test diseñado para revelar tu personalidad a través del sabor.",
+  manifest: "/manifest.json",
+  themeColor: "#16120d",
+  appleWebApp: { capable: true, statusBarStyle: "black", title: "NIV'POP" },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es" className={`${display.variable} ${sans.variable}`}>
-      <body className="antialiased">{children}</body>
+      <head>
+        <link rel="apple-touch-icon" href="/icon.svg" />
+        <meta name="mobile-web-app-capable" content="yes" />
+      </head>
+      <body className="antialiased">
+        {children}
+        <PWARegister />
+      </body>
     </html>
   );
 }

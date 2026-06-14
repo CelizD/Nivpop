@@ -63,6 +63,16 @@ body {
 .compat-ring { transition: stroke-dashoffset 1.4s cubic-bezier(.22,1,.36,1); }
 
 @media print {
-  body > *:not(#print-area) { display: none !important; }
-  #print-area { display: block !important; }
+  body { background: white !important; color: black !important; }
+  .no-print { display: none !important; }
+  #print-ticket {
+    position: fixed; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: white;
+  }
+  #print-ticket * {
+    color: #111 !important;
+    border-color: #ccc !important;
+    background: transparent !important;
+  }
 }

@@ -32,7 +32,7 @@ export default function TicketScreen({ state, duo, onReset }: Props) {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen px-6 py-16">
       {/* Ticket */}
-      <div className="w-full max-w-xs border border-paper/20 bg-paper/[0.03]">
+      <div id="print-ticket" className="w-full max-w-xs border border-paper/20 bg-paper/[0.03]">
         {/* Header stripe */}
         <div className="h-1" style={{ backgroundColor: hex }} />
 
@@ -81,7 +81,7 @@ export default function TicketScreen({ state, duo, onReset }: Props) {
       </div>
 
       {/* Actions */}
-      <div className="w-full max-w-xs mt-8 space-y-3">
+      <div className="w-full max-w-xs mt-8 space-y-3 no-print">
         <button
           onClick={() => window.print()}
           className="w-full font-sans text-[11px] tracking-[0.4em] uppercase text-ink bg-paper py-4 hover:bg-paper/90 active:scale-95 transition-all duration-150"
