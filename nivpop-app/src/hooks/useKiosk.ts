@@ -139,6 +139,11 @@ export function useKiosk() {
     go("duo-result");
   }, [go]);
 
+  const showShare = useCallback((mode: "solo" | "duo") => {
+    dispatch({ type: "SET_SHARE_MODE", shareMode: mode });
+    go("share");
+  }, [go]);
+
   const showTicket = useCallback((mode: "solo" | "duo") => {
     dispatch({ type: "SET_FOLIO", folio: genFolio() });
     go(mode === "solo" ? "ticket" : "duo-ticket");
@@ -151,5 +156,5 @@ export function useKiosk() {
 
   const questions = state.testMode === "p" ? QP : QT;
 
-  return { state, dispatch, go, startSolo, startDuo, answerSolo: (idx: number) => answerSolo(state, idx, questions), answerDuo: (idx: number) => answerDuo(state, idx), finishSolo: () => finishSolo(state), finishDuo: () => finishDuo(state), showTicket, reset, questions };
+  return { state, dispatch, go, startSolo, startDuo, answerSolo: (idx: number) => answerSolo(state, idx, questions), answerDuo: (idx: number) => answerDuo(state, idx), finishSolo: () => finishSolo(state), finishDuo: () => finishDuo(state), showShare, showTicket, reset, questions };
 }

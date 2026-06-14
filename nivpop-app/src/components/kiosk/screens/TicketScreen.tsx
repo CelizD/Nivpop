@@ -83,14 +83,20 @@ export default function TicketScreen({ state, duo, onReset }: Props) {
       {/* Actions */}
       <div className="w-full max-w-xs mt-8 space-y-3">
         <button
-          onClick={handleCopy}
+          onClick={() => window.print()}
           className="w-full font-sans text-[11px] tracking-[0.4em] uppercase text-ink bg-paper py-4 hover:bg-paper/90 active:scale-95 transition-all duration-150"
+        >
+          IMPRIMIR
+        </button>
+        <button
+          onClick={handleCopy}
+          className="w-full font-sans text-[11px] tracking-[0.4em] uppercase text-paper/70 border border-paper/20 py-4 hover:border-paper/40 active:scale-95 transition-all duration-150"
         >
           COPIAR TEXTO
         </button>
         <button
           onClick={onReset}
-          className="w-full font-sans text-[11px] tracking-[0.4em] uppercase text-paper/50 border border-paper/15 py-4 hover:border-paper/30 hover:text-paper/70 active:scale-95 transition-all duration-150"
+          className="w-full font-sans text-[11px] tracking-[0.4em] uppercase text-paper/40 py-3 hover:text-paper/60 active:scale-95 transition-all duration-150"
         >
           NUEVA VISITA
         </button>

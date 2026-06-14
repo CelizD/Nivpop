@@ -6,10 +6,11 @@ import { FLAVOR_HEX } from "@/lib/colors";
 interface Props {
   state: KioskState;
   onTicket: () => void;
+  onShare: () => void;
   onReset: () => void;
 }
 
-export default function DuoResultScreen({ state, onTicket, onReset }: Props) {
+export default function DuoResultScreen({ state, onTicket, onShare, onReset }: Props) {
   const { dRKey, dN1, dN2, dVin, lastCompat } = state;
   const f = FLAVORS[dRKey];
   const hex = FLAVOR_HEX[dRKey];
@@ -87,8 +88,14 @@ export default function DuoResultScreen({ state, onTicket, onReset }: Props) {
           OBTENER TICKET
         </button>
         <button
+          onClick={onShare}
+          className="w-full font-sans text-[11px] tracking-[0.4em] uppercase text-paper/70 border border-paper/20 py-4 hover:border-paper/40 active:scale-95 transition-all duration-150"
+        >
+          COMPARTIR
+        </button>
+        <button
           onClick={onReset}
-          className="w-full font-sans text-[11px] tracking-[0.4em] uppercase text-paper/50 border border-paper/15 py-4 hover:border-paper/30 hover:text-paper/70 active:scale-95 transition-all duration-150"
+          className="w-full font-sans text-[11px] tracking-[0.4em] uppercase text-paper/40 py-3 hover:text-paper/60 active:scale-95 transition-all duration-150"
         >
           NUEVA VISITA
         </button>

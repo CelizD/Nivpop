@@ -2,7 +2,7 @@
 
 const EMOJIS = ["🍓","🍦","🍃","🍫","🥭","💜","🍵","🍯","🫐","🍮","🍋","🌿","☕","🍌","🍷","🌸"];
 
-export default function WelcomeScreen({ onStart }: { onStart: () => void }) {
+export default function WelcomeScreen({ onStart, onCatalog }: { onStart: () => void; onCatalog: () => void }) {
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen px-8 py-20 text-center overflow-hidden">
       <div className="mb-14">
@@ -28,6 +28,13 @@ export default function WelcomeScreen({ onStart }: { onStart: () => void }) {
         className="font-sans text-[11px] tracking-[0.4em] uppercase text-ink bg-paper px-16 py-5 hover:bg-paper/90 active:scale-95 transition-all duration-150"
       >
         COMENZAR
+      </button>
+
+      <button
+        onClick={onCatalog}
+        className="mt-8 font-sans text-[10px] tracking-[0.35em] text-muted/50 uppercase hover:text-muted/80 transition-colors"
+      >
+        VER CATÁLOGO →
       </button>
 
       <div className="absolute bottom-10 left-0 right-0 text-center pointer-events-none select-none">
