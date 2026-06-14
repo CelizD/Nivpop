@@ -22,6 +22,10 @@ const DUO_ALL={fresa:'La Alianza del Corazón',vainilla:'La Alianza Serena',ment
 const DUO_TIP={fresa:'Cuando la intensidad suba, acuerden una palabra que signifique "pausa, no abandono". Esa distinción cambia todo en vínculos como el de ustedes.',vainilla:'Introduzcan pequeñas dosis de novedad deliberada. Su estabilidad es una fortaleza, no una limitación.',menta:'Practiquen estar juntos sin analizar ni planear. El silencio compartido también es una forma de conexión.',choco:'Busquen momentos de ligereza deliberada. Su profundidad no se pierde — de hecho, se enriquece.',mango:'Reserven espacio para conversaciones difíciles. Los vínculos crecen cuando se sostienen las cosas que incomodan.',lavanda:'Practiquen la comunicación verbal directa. No siempre el otro puede leer lo que no se dice.',matcha:'Celebren el proceso, no solo el resultado. Su vínculo se fortalece cuando se permiten estar juntos también en lo imperfecto.',miel:'Identifiquen quién cuida a quienes cuidan. Los vínculos nutritivos son aquellos donde el cuidado va en ambas direcciones.',higo:'Permítanse cambiar juntos sin que eso amenace lo que han construido. Evolucionar de la mano requiere confianza.',caramelo:'Celebren sus contradicciones como dúo. No necesitan ser iguales para ser compatibles — esa diferencia es su mayor fortaleza.',yuzu:'Aprendan a aterrizar su energía compartida en proyectos concretos. Son un dúo que puede cambiar el ambiente de cualquier espacio.',earl:'Practiquen la imprecisión ocasional. No todo momento compartido necesita ser analizado — algunos simplemente necesitan vivirse.',chai:'Compartan su sabiduría con el mundo. Su vínculo tiene una calidez que otros necesitan — no la guarden solo para ustedes.',platano:'Creen nuevos recuerdos con la misma atención con que cuidan los del pasado. Su historia es una base, no un destino.',vino:'Permítanse también la ligereza. La intensidad que comparten es su fuerza — pero los mejores vínculos también saben cuándo reír.',carda:'Compartan su sensibilidad espiritual con quienes los rodean. Hay algo en la forma en que se relacionan que eleva cualquier espacio.'};
 const VINCULOS={pareja:{icon:'💑',label:'Pareja'},amigos:{icon:'🫂',label:'Amigos'},hermanos:{icon:'👫',label:'Hermanos'},familia:{icon:'🏠',label:'Familia'},colegas:{icon:'🤝',label:'Colegas'},otro:{icon:'✨',label:'Otro'}};
 
+// ════════ MARIDAJE DE BEBIDAS ════════
+const MARIDAJE={fresa:['Espresso doble','Agua con gas y lima'],vainilla:['Café de olla','Té chai caliente'],menta:['Agua mineral fría','Té verde con hielo'],choco:['Café negro','Mezcal añejo'],mango:['Agua de jamaica','Kombucha de jengibre'],lavanda:['Té de camomila','Agua floral de rosas'],matcha:['Agua de coco','Té verde ceremonial'],miel:['Té de canela','Agua tibia con limón'],higo:['Vino blanco seco','Café de filtro'],caramelo:['Cappuccino','Sidra natural'],yuzu:['Agua tónica','Té cítrico frío'],earl:['Earl Grey caliente','Agua mineral con ralladura'],chai:['Chai latte','Café con especias'],platano:['Leche con chocolate','Café con leche'],vino:['Vino tinto suave','Café negro intenso'],carda:['Té de cardamomo','Agua de rosas']};
+const TEMPORADA=new Set(['yuzu','carda','higo']);
+
 // ════════ QUESTIONS ════════
 const QP=[
   {q:'¿Cómo prefieres pasar tu tiempo libre?',o:[{t:'Con personas que me llenen de energía',s:{fresa:3,miel:1}},{t:'En calma, sin mucho estímulo externo',s:{vainilla:3,matcha:1}},{t:'Explorando algo nuevo — un lugar o una idea',s:{menta:3,yuzu:1}},{t:'A solas con mis pensamientos',s:{choco:3,earl:1}},{t:'En una aventura espontánea sin plan',s:{mango:3}},{t:'Creando algo — arte, escritura o música',s:{lavanda:3,carda:1}},{t:'Con un ritual consciente — meditación, lectura',s:{matcha:3}},{t:'Cocinando o recibiendo a personas queridas',s:{chai:3,platano:1}}]},
@@ -286,6 +290,14 @@ function showResult(type){
       });
     }
     document.getElementById('ks-result').scrollTop=0;
+    // ── Maridaje ──
+    const _mar=MARIDAJE[rKey],_marEl=document.getElementById('krMaridaje');
+    if(_marEl) _marEl.innerHTML=_mar?_mar.map(m=>`<span class="kr-mar-chip">${m}</span>`).join(''):'';
+    // ── Temporada ──
+    const _tEl=document.getElementById('krTemporada');
+    if(_tEl) _tEl.style.display=TEMPORADA.has(rKey)?'flex':'none';
+    // ── QR ──
+    genQR('resultQR',`${F[rKey].name} · ${F[rKey].persona} · #NivPop`);
   } else {
     const f=F[dRKey]; kGo('duo-result');
     const v=VINCULOS[dVin]||VINCULOS.otro;
@@ -332,6 +344,11 @@ function showResult(type){
       });
     }
     document.getElementById('ks-duo-result').scrollTop=0;
+    // ── Maridaje ──
+    const _mard=MARIDAJE[dRKey],_marEld=document.getElementById('kdrMaridaje');
+    if(_marEld) _marEld.innerHTML=_mard?_mard.map(m=>`<span class="kr-mar-chip">${m}</span>`).join(''):'';
+    // ── QR ──
+    genQR('resultQRDuo',`${F[dRKey].name} · ${DUO_ALL[dRKey]||''} · ${lastCompat}% · #NivPop`);
   }
 }
 
@@ -354,6 +371,7 @@ function showTicket(type){
     document.getElementById('tkFolio').textContent=folio;
     document.getElementById('tkBC').textContent=bc;
     document.getElementById('tkAl').innerHTML=buildAlPills(f);
+    genQR('tkQR',folio);
     kGo('ticket');
   } else {
     const f=F[dRKey]; const v=VINCULOS[dVin]||VINCULOS.otro;
@@ -368,6 +386,7 @@ function showTicket(type){
     document.getElementById('dkFolio').textContent=folio;
     document.getElementById('dkBC').textContent=bc;
     document.getElementById('dkAl').innerHTML=buildAlPills(f);
+    genQR('dkQR',folio);
     kGo('duo-ticket');
   }
 }
@@ -381,7 +400,7 @@ function buildCatalog(){
   const activeEntries = Object.entries(F).filter(([k])=>activosIds.includes(k));
   g.innerHTML=activeEntries.map(([k,f])=>`
     <div class="fc ${f.cls}" data-base="${f.baseType}" data-lacteos="${f.allergens.lacteos}" data-frutos="${f.allergens.frutosSecs}" style="--c:${f.c};--c2:${f.c2}">
-      <div class="fc-top"><div class="fc-name">${f.name}</div><div class="fc-persona">${f.persona}</div></div>
+      <div class="fc-top">${TEMPORADA.has(k)?'<span class="fc-temporada">✨ Edición limitada</span>':''}<div class="fc-name">${f.name}</div><div class="fc-persona">${f.persona}</div></div>
       <div class="fc-body">
         <div class="fc-desc">${f.desc}</div>
         <div class="fc-tags">${f.traits.map(t=>`<span class="fc-tag">${t.l}</span>`).join('')}</div>
@@ -713,6 +732,72 @@ function copyShareText(mode){
   }).catch(()=>alert('Copia este texto:\n\n'+txt));
 }
 
+// ════════ WHATSAPP SHARE ════════
+function openWhatsApp(mode){
+  const txt=mode==='solo'
+    ?`🍦 Mi perfil de nieve:\n\n${FLAVOR_EMOJI[rKey]||'🍦'} ${F[rKey].name}\n${F[rKey].persona}\n\n"${F[rKey].ins.hl}"\n\n¿Cuál eres tú? 👉 #NivPop`
+    :`💞 Nuestro sabor compartido:\n\n${FLAVOR_EMOJI[dRKey]||'🍦'} ${F[dRKey].name}\n${DUO_ALL[dRKey]||''}\nCompatibilidad: ${lastCompat}%\n\n${dN1} & ${dN2} 💞\n\n#NivPop #SaborCompartido`;
+  window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');
+}
+
+// ════════ QR CODE ════════
+function genQR(elId,text){
+  if(typeof QRCode==='undefined') return;
+  const el=document.getElementById(elId);
+  if(!el) return;
+  el.innerHTML='';
+  new QRCode(el,{text,width:90,height:90,colorDark:'#16120d',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H});
+}
+
+// ════════ FOTO + MARCO ════════
+let _camStream=null;
+async function openPhotoCamera(){
+  const modal=document.getElementById('photoCamModal');
+  if(!modal) return;
+  try{
+    _camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'}});
+    const vid=document.getElementById('photoCamVideo');
+    if(vid){vid.srcObject=_camStream;vid.play();}
+    modal.classList.add('show');
+  }catch(e){
+    alert('Permite el acceso a la cámara para tomar tu selfie 📷');
+  }
+}
+function closePhotoCamera(){
+  const modal=document.getElementById('photoCamModal');
+  if(modal) modal.classList.remove('show');
+  if(_camStream){_camStream.getTracks().forEach(t=>t.stop());_camStream=null;}
+  const vid=document.getElementById('photoCamVideo');
+  if(vid) vid.srcObject=null;
+}
+async function capturePhotoSelfie(){
+  const vid=document.getElementById('photoCamVideo');
+  const cntEl=document.getElementById('camCountdown');
+  if(!vid||!vid.srcObject) return;
+  for(let i=3;i>0;i--){
+    if(cntEl) cntEl.textContent=i;
+    await new Promise(r=>setTimeout(r,900));
+  }
+  if(cntEl) cntEl.textContent='';
+  const canvas=document.getElementById('shareCanvas');
+  if(!canvas){closePhotoCamera();return;}
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width,H=canvas.height;
+  const tmp=document.createElement('canvas');
+  tmp.width=W;tmp.height=H;
+  tmp.getContext('2d').drawImage(canvas,0,0);
+  const vw=vid.videoWidth||640,vh=vid.videoHeight||480;
+  const canAspect=W/H,vidAspect=vw/vh;
+  let sx=0,sy=0,sw=vw,sh=vh;
+  if(vidAspect>canAspect){sw=vh*canAspect;sx=(vw-sw)/2;}
+  else{sh=vw/canAspect;sy=(vh-sh)/2;}
+  ctx.save();ctx.translate(W,0);ctx.scale(-1,1);
+  ctx.drawImage(vid,sx,sy,sw,sh,0,0,W,H);
+  ctx.restore();
+  ctx.globalAlpha=0.72;ctx.drawImage(tmp,0,0);ctx.globalAlpha=1;
+  closePhotoCamera();
+}
+
 // ════════ INIT ════════
 buildCatalog();
 document.getElementById('nameP')?.addEventListener('keydown',e=>{if(e.key==='Enter')startSolo('p');});
@@ -919,29 +1004,46 @@ const shakeStyle = document.createElement('style');
 shakeStyle.textContent = `@keyframes shake{0%,100%{transform:none}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}`;
 document.head.appendChild(shakeStyle);
 
-// ════════ AUTO-REGRESO AL INICIO (modo web) ════════
-// Si el usuario está en la pantalla welcome del kiosco por más de 45s sin interacción
-// solo aplica si NO está en modo kiosco activo
-let _idleTimer = null;
-let _idleSeconds = 0;
-const IDLE_LIMIT = 45;
+// ════════ IDLE + PANTALLA PROMO ════════
+let _idleTimer=null,_idleAnimTimer=null,_idleAnimIdx=0;
+const IDLE_LIMIT=45;
+
+function _showIdleScreen(){
+  kGo('welcome');
+  const el=document.getElementById('idleScreen');
+  if(!el) return;
+  el.classList.add('show');
+  _idleAnimIdx=0;
+  const entries=Object.entries(F);
+  function tick(){
+    const [k,f]=entries[_idleAnimIdx%entries.length];
+    const nameEl=document.getElementById('idleFlavorName');
+    const emojiEl=document.getElementById('idleFlavorEmoji');
+    if(nameEl){nameEl.style.opacity='0';setTimeout(()=>{nameEl.textContent=f.name;nameEl.style.opacity='1';},200);}
+    if(emojiEl){emojiEl.style.opacity='0';setTimeout(()=>{emojiEl.textContent=FLAVOR_EMOJI[k]||'🍦';emojiEl.style.opacity='1';},200);}
+    _idleAnimIdx++;
+  }
+  tick();
+  _idleAnimTimer=setInterval(tick,2200);
+}
+
+function _hideIdleScreen(){
+  const el=document.getElementById('idleScreen');
+  if(el) el.classList.remove('show');
+  if(_idleAnimTimer){clearInterval(_idleAnimTimer);_idleAnimTimer=null;}
+}
 
 function resetIdleTimer(){
-  _idleSeconds = 0;
-  if(_idleTimer) clearInterval(_idleTimer);
-  // Solo activar en pantalla welcome
-  const welcomeActive = document.getElementById('ks-welcome')?.classList.contains('active') ||
-    !document.querySelector('.ks.active');
-  if(!welcomeActive) return;
-  _idleTimer = setInterval(()=>{
-    _idleSeconds++;
-    if(_idleSeconds >= IDLE_LIMIT){
-      clearInterval(_idleTimer);
-      kGo('welcome');
-    }
-  }, 1000);
+  _hideIdleScreen();
+  if(_idleTimer){clearTimeout(_idleTimer);_idleTimer=null;}
+  const kOverlay=document.getElementById('kiosco-overlay');
+  if(!kOverlay||kOverlay.style.display!=='flex') return;
+  _idleTimer=setTimeout(()=>{
+    _idleTimer=null;
+    if(document.getElementById('ks-welcome')?.classList.contains('active')) _showIdleScreen();
+  },IDLE_LIMIT*1000);
 }
 
 ['click','keydown','touchstart','mousemove'].forEach(evt=>{
-  document.addEventListener(evt, resetIdleTimer, {passive:true});
+  document.addEventListener(evt,resetIdleTimer,{passive:true});
 });

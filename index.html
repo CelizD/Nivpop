@@ -139,6 +139,28 @@
   </div>
 </footer>
 
+<!-- IDLE SCREEN PROMO -->
+<div id="idleScreen">
+  <div class="idle-inner">
+    <div class="idle-emoji" id="idleFlavorEmoji">🍦</div>
+    <div class="idle-label">Descubre tu nieve ideal</div>
+    <div class="idle-name" id="idleFlavorName">NIV'POP</div>
+    <div class="idle-tap">Toca para comenzar</div>
+  </div>
+</div>
+
+<!-- PHOTO CAMERA MODAL -->
+<div id="photoCamModal">
+  <div class="photo-cam-inner">
+    <div class="photo-cam-count" id="camCountdown"></div>
+    <video id="photoCamVideo" autoplay playsinline muted></video>
+    <div class="photo-cam-btns">
+      <button onclick="capturePhotoSelfie()">📸 Capturar</button>
+      <button onclick="closePhotoCamera()">✕ Cancelar</button>
+    </div>
+  </div>
+</div>
+
 <div id="kiosco-overlay">
   <div class="k-topbar">
     <div class="k-topbar-logo">NIV<span>'</span>POP</div>
@@ -273,6 +295,9 @@
         <span class="kr-slbl">Alérgenos</span><div class="kr-algrid" id="krAl"></div>
         <p style="font-family:var(--fs);font-size:11px;color:var(--light);margin-bottom:5px;line-height:1.5">Información orientativa. Consulta siempre en caja.</p>
         <div class="kr-rule"></div>
+        <span class="kr-slbl">Maridaje recomendado</span>
+        <div id="krMaridaje" class="kr-mar-row"></div>
+        <div class="kr-rule"></div>
         <span class="kr-slbl">Fundamento psicológico</span><div class="kr-txt" id="krPsy"></div>
         <div class="kr-rule"></div>
         <span class="kr-slbl">Para ti</span><div id="krTips"></div>
@@ -287,12 +312,16 @@
             <div class="share-hl" id="ssHl"></div>
             <div class="share-tag">#NivPop · nivpop.mx</div>
             <div class="share-btns-row">
-              <button class="sbtn sbtn-ig" onclick="openShare('solo')">📸 Compartir en Instagram</button>
+              <button class="sbtn sbtn-wa" onclick="openWhatsApp('solo')">💬 WhatsApp</button>
+              <button class="sbtn sbtn-ig" onclick="openShare('solo')">📸 Instagram</button>
               <button class="sbtn sbtn-tk" onclick="openShare('solo')">🎵 TikTok</button>
-              <button class="sbtn sbtn-copy" id="ssCopyBtn" onclick="copyShareText('solo')">📋 Copiar texto</button>
+              <button class="sbtn sbtn-copy" id="ssCopyBtn" onclick="copyShareText('solo')">📋 Copiar</button>
             </div>
           </div>
         </div>
+        <div class="kr-rule"></div>
+        <div id="krTemporada" class="kr-temporada-badge" style="display:none">✨ Edición limitada — disponible por tiempo limitado</div>
+        <div id="resultQR" class="kr-qr-wrap"></div>
         <div class="kr-rule"></div>
         <div class="k-tcta"><span class="k-tclbl">Ya estás listo/a</span><div class="k-tctitle" id="krTkN"></div><div class="k-tcsub">Imprime tu ticket y entrégalo en caja</div><button class="kb-ticket" onclick="showTicket('solo')">🎟 Imprimir mi ticket</button></div>
         <button class="kb kb-ghost" onclick="kGo('mode')" style="margin-top:8px">Volver al inicio</button><br>
@@ -314,6 +343,9 @@
         <div class="kr-rule"></div>
         <span class="kr-slbl">Alérgenos</span><div class="kr-algrid" id="kdrAl"></div>
         <p style="font-family:var(--fs);font-size:11px;color:var(--light);margin-bottom:5px;line-height:1.5">Información orientativa. Consulta siempre en caja.</p>
+        <div class="kr-rule"></div>
+        <span class="kr-slbl">Maridaje recomendado</span>
+        <div id="kdrMaridaje" class="kr-mar-row"></div>
         <div class="kr-rule"></div>
         <!-- COMPAT METER -->
         <div class="compat-wrap">
@@ -344,12 +376,15 @@
             <div class="share-tag" id="sdCompat"></div>
             <div style="font-family:var(--fs);font-size:9px;letter-spacing:1.5px;color:rgba(255,255,255,.2);margin-bottom:10px">#NivPop · nivpop.mx</div>
             <div class="share-btns-row">
-              <button class="sbtn sbtn-ig" onclick="openShare('duo')">📸 Compartir en Instagram</button>
+              <button class="sbtn sbtn-wa" onclick="openWhatsApp('duo')">💬 WhatsApp</button>
+              <button class="sbtn sbtn-ig" onclick="openShare('duo')">📸 Instagram</button>
               <button class="sbtn sbtn-tk" onclick="openShare('duo')">🎵 TikTok</button>
-              <button class="sbtn sbtn-copy" id="sdCopyBtn" onclick="copyShareText('duo')">📋 Copiar texto</button>
+              <button class="sbtn sbtn-copy" id="sdCopyBtn" onclick="copyShareText('duo')">📋 Copiar</button>
             </div>
           </div>
         </div>
+        <div class="kr-rule"></div>
+        <div id="resultQRDuo" class="kr-qr-wrap"></div>
         <div class="kr-rule"></div>
         <div class="k-tcta"><span class="k-tclbl">¡Listos los dos!</span><div class="k-tctitle" id="kdrTkN"></div><div class="k-tcsub">Impriman su ticket y entréguenlo en caja</div><button class="kb-ticket" onclick="showTicket('duo')">🎟 Imprimir nuestro ticket</button></div>
         <button class="kb kb-ghost" onclick="kGo('mode')" style="margin-top:8px">Volver al inicio</button><br>
@@ -373,7 +408,7 @@
           <div class="tk-sec"><div class="tk-lbl">Alérgenos</div><div class="tk-al-row" id="tkAl"></div><div style="font-family:var(--fs);font-size:8px;color:var(--light);margin-top:4px">Consulta siempre en caja.</div></div>
           <div class="tk-div">✦ ✦ ✦</div>
           <div class="tk-sec" style="border-bottom:none"><div class="tk-lbl">Folio</div><div class="tk-val" style="font-size:11px;font-family:monospace;letter-spacing:2px" id="tkFolio"></div></div>
-          <div class="tk-foot"><div class="tk-foot-txt">Presenta este ticket en caja<br>para recibir tu nieve<br><br><strong>NIV'Pop</strong> — un sabor para cada quien</div><span class="tk-bc" id="tkBC"></span></div>
+          <div class="tk-foot"><div class="tk-foot-txt">Presenta este ticket en caja<br>para recibir tu nieve<br><br><strong>NIV'Pop</strong> — un sabor para cada quien</div><div id="tkQR" style="margin-top:8px;display:flex;justify-content:center"></div><span class="tk-bc" id="tkBC"></span></div>
         </div>
       </div>
     </div>
@@ -395,7 +430,7 @@
           <div class="tk-sec"><div class="tk-lbl">Alérgenos</div><div class="tk-al-row" id="dkAl"></div><div style="font-family:var(--fs);font-size:8px;color:var(--light);margin-top:4px">Consulta siempre en caja.</div></div>
           <div class="tk-div">✦ ✦ ✦</div>
           <div class="tk-sec" style="border-bottom:none"><div class="tk-lbl">Folio</div><div class="tk-val" style="font-size:11px;font-family:monospace;letter-spacing:2px" id="dkFolio"></div></div>
-          <div class="tk-foot"><div class="tk-foot-txt">Presenten este ticket en caja<br>para recibir su nieve compartida<br><br><strong>NIV'Pop</strong> — un sabor para cada vínculo</div><span class="tk-bc" id="dkBC"></span></div>
+          <div class="tk-foot"><div class="tk-foot-txt">Presenten este ticket en caja<br>para recibir su nieve compartida<br><br><strong>NIV'Pop</strong> — un sabor para cada vínculo</div><div id="dkQR" style="margin-top:8px;display:flex;justify-content:center"></div><span class="tk-bc" id="dkBC"></span></div>
         </div>
       </div>
     </div>
@@ -407,11 +442,14 @@
   <canvas id="shareCanvas" width="1080" height="1920"></canvas>
   <div class="sov-btns">
     <button class="sov-btn sov-save" onclick="downloadShare()">⬇ Guardar</button>
+    <button class="sov-btn sov-cam" onclick="openPhotoCamera()">📷 Selfie</button>
     <button class="sov-btn sov-ig" onclick="shareNative('ig')">📸 Instagram</button>
     <button class="sov-btn sov-tk" onclick="shareNative('tk')">🎵 TikTok</button>
     <button class="sov-btn sov-close" onclick="closeShare()">✕ Cerrar</button>
   </div>
 </div>
+  <!-- QR code library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <!-- Shared data layer — must load first -->
   <script src="js/db.js"></script>
   <!-- Kiosk logic -->
