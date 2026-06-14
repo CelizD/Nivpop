@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import type { FlavorId } from "@/lib/types";
 import { useKiosk } from "@/hooks/useKiosk";
+import { getKiosko } from "@/lib/storage";
 import WelcomeScreen      from "./screens/WelcomeScreen";
 import ModeScreen         from "./screens/ModeScreen";
 import NameScreen         from "./screens/NameScreen";
@@ -15,13 +16,14 @@ import TicketScreen       from "./screens/TicketScreen";
 import ShareScreen        from "./screens/ShareScreen";
 import CatalogScreen      from "./screens/CatalogScreen";
 import CatalogDetailScreen from "./screens/CatalogDetailScreen";
+import PauseScreen        from "./screens/PauseScreen";
 
 const IDLE_MS = 45_000;
 
 export default function KioskOverlay() {
   const {
     state, dispatch,
-    go, startSolo, startDuo,
+    go, startSolo, startDuo, startSurprise,
     answerSolo, answerDuo,
     finishSolo, finishDuo,
     showShare, showTicket, reset,
@@ -30,10 +32,25 @@ export default function KioskOverlay() {
 
   const { screen } = state;
   const [catalogFlavorId, setCatalogFlavorId] = useState<FlavorId>("fresa");
+  const [paused, setPaused] = useState(false);
 
-  // Idle timer — resets to welcome after IDLE_MS of inactivity
+  // Pause detection — listen for changes from admin in another tab
   useEffect(() => {
-    if (screen === "welcome") return;
+    const check = () => setPaused(!!getKiosko().pausado);
+    check();
+    function onStorage(e: StorageEvent) {
+      if (e.key === "nivpop_kiosko") {
+        const v = e.newValue ? JSON.parse(e.newValue) : {};
+        setPaused(!!v.pausado);
+      }
+    }
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
+
+  // Idle timer
+  useEffect(() => {
+    if (screen === "welcome" || paused) return;
     let timer: ReturnType<typeof setTimeout>;
     const resetTimer = () => {
       clearTimeout(timer);
@@ -46,7 +63,15 @@ export default function KioskOverlay() {
       clearTimeout(timer);
       events.forEach((e) => window.removeEventListener(e, resetTimer));
     };
-  }, [screen, reset]);
+  }, [screen, paused, reset]);
+
+  if (paused) {
+    return (
+      <div className="fixed inset-0 bg-ink overflow-hidden">
+        <PauseScreen />
+      </div>
+    );
+  }
 
   function renderScreen() {
     switch (screen) {
@@ -55,6 +80,7 @@ export default function KioskOverlay() {
           <WelcomeScreen
             onStart={() => go("mode")}
             onCatalog={() => go("catalog")}
+            onSurprise={() => go("name-surprise")}
           />
         );
 
@@ -82,6 +108,17 @@ export default function KioskOverlay() {
             mode="t"
             onSubmit={(name) => startSolo("t", name)}
             onBack={() => go("mode")}
+          />
+        );
+
+      case "name-surprise":
+        return (
+          <NameScreen
+            mode="p"
+            headline="¿Cuál es tu nombre?"
+            hint="Te asignamos un sabor sorpresa ✨"
+            onSubmit={(name) => startSurprise(name)}
+            onBack={() => go("welcome")}
           />
         );
 

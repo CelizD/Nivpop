@@ -3,14 +3,16 @@ import { useState } from "react";
 
 interface Props {
   mode: "p" | "t";
+  headline?: string;
+  hint?: string;
   onSubmit: (name: string) => void;
   onBack: () => void;
 }
 
-export default function NameScreen({ mode, onSubmit, onBack }: Props) {
+export default function NameScreen({ mode, headline, hint: hintProp, onSubmit, onBack }: Props) {
   const [name, setName] = useState("");
-  const label = mode === "p" ? "¿Cómo te llamas?" : "¿Cuál es tu nombre de hoy?";
-  const hint  = mode === "p" ? "Así aparecerá en tu resultado" : "Para personalizar tu perfil de estado";
+  const label = headline ?? (mode === "p" ? "¿Cómo te llamas?" : "¿Cuál es tu nombre de hoy?");
+  const hint  = hintProp  ?? (mode === "p" ? "Así aparecerá en tu resultado" : "Para personalizar tu perfil de estado");
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

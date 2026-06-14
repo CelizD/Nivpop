@@ -139,6 +139,15 @@ export function useKiosk() {
     go("duo-result");
   }, [go]);
 
+  const startSurprise = useCallback((name: string) => {
+    const ids = getActiveIds();
+    const rKey = ids[Math.floor(Math.random() * ids.length)] as FlavorId;
+    dispatch({ type: "SET_MODE", testMode: "p" });
+    dispatch({ type: "SET_NAME", name });
+    dispatch({ type: "SET_RESULT", rKey });
+    go("loading");
+  }, [go]);
+
   const showShare = useCallback((mode: "solo" | "duo") => {
     dispatch({ type: "SET_SHARE_MODE", shareMode: mode });
     go("share");
@@ -156,5 +165,5 @@ export function useKiosk() {
 
   const questions = state.testMode === "p" ? QP : QT;
 
-  return { state, dispatch, go, startSolo, startDuo, answerSolo: (idx: number) => answerSolo(state, idx, questions), answerDuo: (idx: number) => answerDuo(state, idx), finishSolo: () => finishSolo(state), finishDuo: () => finishDuo(state), showShare, showTicket, reset, questions };
+  return { state, dispatch, go, startSolo, startDuo, startSurprise, answerSolo: (idx: number) => answerSolo(state, idx, questions), answerDuo: (idx: number) => answerDuo(state, idx), finishSolo: () => finishSolo(state), finishDuo: () => finishDuo(state), showShare, showTicket, reset, questions };
 }

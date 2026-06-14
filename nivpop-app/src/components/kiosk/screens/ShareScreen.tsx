@@ -3,6 +3,7 @@ import { useState } from "react";
 import type { KioskState } from "@/lib/types";
 import { FLAVORS, FLAVOR_EMOJI } from "@/lib/flavors";
 import { FLAVOR_HEX } from "@/lib/colors";
+import { generateShareCard } from "@/lib/shareCard";
 
 interface Props {
   state: KioskState;
@@ -11,16 +12,17 @@ interface Props {
 }
 
 export default function ShareScreen({ state, onBack, onReset }: Props) {
-  const [copied, setCopied] = useState(false);
-  const duo  = state.shareMode === "duo";
-  const key  = duo ? state.dRKey : state.rKey;
-  const f    = FLAVORS[key];
-  const hex  = FLAVOR_HEX[key];
+  const [copied, setCopied]     = useState(false);
+  const [imgLoading, setImgLoading] = useState(false);
+  const duo   = state.shareMode === "duo";
+  const key   = duo ? state.dRKey : state.rKey;
+  const f     = FLAVORS[key];
+  const hex   = FLAVOR_HEX[key];
   const emoji = FLAVOR_EMOJI[key];
 
   const shareText = duo
-    ? `\u{1F49E} Nuestro sabor compartido en NIV’POP\n\n${emoji} ${f.name}\n${state.dN1} & ${state.dN2}\nCompatibilidad: ${state.lastCompat}%\n\n“${f.ins.hl}”\n\n#NivPop #SaborCompartido`
-    : `\u{1F366} Mi perfil de nieve en NIV’POP\n\n${emoji} ${f.name} — ${f.persona}${state.cName ? `\n${state.cName}` : ""}\n\n“${f.ins.hl}”\n\n#NivPop`;
+    ? `\u{1F49E} Nuestro sabor compartido en NIV'POP\n\n${emoji} ${f.name}\n${state.dN1} & ${state.dN2}\nCompatibilidad: ${state.lastCompat}%\n\n"${f.ins.hl}"\n\n#NivPop #SaborCompartido`
+    : `\u{1F366} Mi perfil de nieve en NIV'POP\n\n${emoji} ${f.name} — ${f.persona}${state.cName ? `\n${state.cName}` : ""}\n\n"${f.ins.hl}"\n\n#NivPop`;
 
   const waUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
 
@@ -29,13 +31,33 @@ export default function ShareScreen({ state, onBack, onReset }: Props) {
       await navigator.clipboard.writeText(shareText);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch { /* clipboard unavailable */ }
+    } catch { /* unavailable */ }
   }
 
   async function handleNative() {
     try {
-      await navigator.share({ text: shareText, title: `NIV’POP — ${f.name}` });
+      await navigator.share({ text: shareText, title: `NIV'POP — ${f.name}` });
     } catch { /* cancelled */ }
+  }
+
+  function handleDownloadCard() {
+    setImgLoading(true);
+    try {
+      const dataUrl = generateShareCard({
+        flavorId: key,
+        name:  !duo ? (state.cName || undefined) : undefined,
+        duo,
+        n1:    duo ? state.dN1 : undefined,
+        n2:    duo ? state.dN2 : undefined,
+        compat: duo ? state.lastCompat : undefined,
+      });
+      const a = document.createElement("a");
+      a.href = dataUrl;
+      a.download = `nivpop-${key}.png`;
+      a.click();
+    } finally {
+      setImgLoading(false);
+    }
   }
 
   const canNative = typeof navigator !== "undefined" && "share" in navigator;
@@ -62,6 +84,13 @@ export default function ShareScreen({ state, onBack, onReset }: Props) {
 
       {/* Buttons */}
       <div className="w-full max-w-xs space-y-3">
+        <button
+          onClick={handleDownloadCard}
+          disabled={imgLoading}
+          className="w-full font-sans text-[11px] tracking-[0.3em] uppercase text-ink bg-paper py-4 hover:bg-paper/90 active:scale-95 transition-all disabled:opacity-50"
+        >
+          {imgLoading ? "GENERANDO…" : "DESCARGAR IMAGEN"}
+        </button>
         <a
           href={waUrl}
           target="_blank"

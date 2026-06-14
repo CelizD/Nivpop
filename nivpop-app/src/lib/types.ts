@@ -52,7 +52,7 @@ export type KioskScreen =
   | "loading" | "duo-loading"
   | "result" | "duo-result"
   | "ticket" | "duo-ticket"
-  | "share" | "catalog" | "catalog-detail";
+  | "share" | "catalog" | "catalog-detail" | "name-surprise";
 
 export interface KioskState {
   screen: KioskScreen;

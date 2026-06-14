@@ -59,3 +59,19 @@ export function getActiveFlavors(): FlavorId[] | null {
   if (!stored || !stored.length) return null;
   return stored.filter((f) => f.activo).map((f) => f.id as FlavorId);
 }
+
+export function setKiosko(k: { pausado?: boolean; brillo?: number; autoPrint?: boolean }) {
+  set(KEYS.kiosko, k);
+}
+
+export function getStock(): Record<string, boolean> {
+  return get<Record<string, boolean>>("nivpop_stock", {});
+}
+
+export function setStock(stock: Record<string, boolean>) {
+  set("nivpop_stock", stock);
+}
+
+export function clearResults() {
+  set(KEYS.results, []);
+}
