@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ink:     #16120d;
+  --paper:   #faf9f6;
+  --rose:    #c4786a;
+  --mid:     #6b5f52;
+  --muted:   #a59a8c;
+  --border:  rgba(22,18,13,.10);
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans, "Outfit", sans-serif);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+@layer utilities {
+  .font-display { font-family: var(--font-display, "Cormorant Garamond", Georgia, serif); }
+  .text-balance  { text-wrap: balance; }
+}
+
+/* Kiosk full-screen overlay */
+#kiosk-root {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  overflow: hidden;
+}
+
+/* Fade-in for kiosk screens */
+.ks-screen { animation: fadeIn .3s ease; }
+@keyframes fadeIn { from { opacity:0 } to { opacity:1 } }
+
+/* Smooth progress bar */
+.progress-fill { transition: width .35s ease; }
+
+/* Shake animation for errors */
+@keyframes shake {
+  0%,100% { transform: none }
+  20%,60%  { transform: translateX(-8px) }
+  40%,80%  { transform: translateX(8px) }
+}
+.shake { animation: shake .35s ease; }
+
+/* Hide scrollbar but keep scroll */
+.scrollable::-webkit-scrollbar { width: 3px; }
+.scrollable::-webkit-scrollbar-track { background: transparent; }
+.scrollable::-webkit-scrollbar-thumb { background: rgba(22,18,13,.15); border-radius: 10px; }
+
+/* Compatibility ring SVG transition */
+.compat-ring { transition: stroke-dashoffset 1.4s cubic-bezier(.22,1,.36,1); }
+
+@media print {
+  body > *:not(#print-area) { display: none !important; }
+  #print-area { display: block !important; }
+}
