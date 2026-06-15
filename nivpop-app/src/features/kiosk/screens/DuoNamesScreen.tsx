@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
-import type { VinculoId } from "@/lib/types";
-import { VINCULOS } from "@/lib/flavors";
+import type { VinculoId } from "@/types";
+import { VINCULOS } from "@/utils/flavors";
 
 const VINCULOS_IDS = Object.keys(VINCULOS) as VinculoId[];
 

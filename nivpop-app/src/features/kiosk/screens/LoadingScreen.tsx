@@ -1,8 +1,8 @@
 "use client";
 import { useEffect } from "react";
-import type { FlavorId } from "@/lib/types";
-import { FLAVOR_EMOJI } from "@/lib/flavors";
-import { FLAVOR_HEX } from "@/lib/colors";
+import type { FlavorId } from "@/types";
+import { FLAVOR_EMOJI } from "@/utils/flavors";
+import { FLAVOR_HEX } from "@/utils/colors";
 
 interface Props {
   flavorId: FlavorId;

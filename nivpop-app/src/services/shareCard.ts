@@ -1,6 +1,6 @@
-import type { FlavorId } from "./types";
-import { FLAVORS } from "./flavors";
-import { FLAVOR_HEX } from "./colors";
+import type { FlavorId } from "@/types";
+import { FLAVORS } from "@/utils/flavors";
+import { FLAVOR_HEX } from "@/utils/colors";
 
 const FLAVOR_EMOJI_MAP: Record<FlavorId, string> = {
   fresa:"🍓",vainilla:"🍦",menta:"🍃",choco:"🍫",mango:"🥭",lavanda:"💜",
@@ -103,7 +103,7 @@ export function generateShareCard(opts: ShareCardOptions): string {
   // Branding
   ctx.font = "400 24px Arial, sans-serif";
   ctx.fillStyle = "rgba(250,249,246,0.18)";
-  ctx.fillText("NIV’POP · HELADOS ARTESANALES", 540, 980);
+  ctx.fillText("NIV'POP · HELADOS ARTESANALES", 540, 980);
 
   ctx.font = "400 20px Arial, sans-serif";
   ctx.fillStyle = "rgba(250,249,246,0.10)";

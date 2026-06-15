@@ -1,9 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
-import type { KioskState } from "@/lib/types";
-import { FLAVORS, FLAVOR_EMOJI } from "@/lib/flavors";
-import { FLAVOR_HEX } from "@/lib/colors";
-import { getKiosko, getStamps } from "@/lib/storage";
+import type { KioskState } from "@/types";
+import { FLAVORS, FLAVOR_EMOJI } from "@/utils/flavors";
+import { FLAVOR_HEX } from "@/utils/colors";
+import { getKiosko, getStamps } from "@/services/storage";
 
 const STAMP_GOAL = 5;
 

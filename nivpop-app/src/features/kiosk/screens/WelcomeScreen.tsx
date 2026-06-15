@@ -1,9 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
-import type { FlavorId } from "@/lib/types";
-import { FLAVOR_EMOJI } from "@/lib/flavors";
-import { FLAVOR_HEX } from "@/lib/colors";
-import { getResults, getResultCount, getStamps } from "@/lib/storage";
+import type { FlavorId } from "@/types";
+import { FLAVOR_EMOJI } from "@/utils/flavors";
+import { FLAVOR_HEX } from "@/utils/colors";
+import { getResults, getResultCount, getStamps } from "@/services/storage";
 
 const EMOJIS = ["🍓","🍦","🍃","🍫","🥭","💜","🍵","🍯","🫐","🍮","🍋","🌿","☕","🍌","🍷","🌸"];
 const STAMP_GOAL = 5;

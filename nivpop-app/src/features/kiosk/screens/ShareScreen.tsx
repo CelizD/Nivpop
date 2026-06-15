@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
-import type { KioskState } from "@/lib/types";
-import { FLAVORS, FLAVOR_EMOJI } from "@/lib/flavors";
-import { FLAVOR_HEX } from "@/lib/colors";
-import { generateShareCard } from "@/lib/shareCard";
+import type { KioskState } from "@/types";
+import { FLAVORS, FLAVOR_EMOJI } from "@/utils/flavors";
+import { FLAVOR_HEX } from "@/utils/colors";
+import { generateShareCard } from "@/services/shareCard";
 
 interface Props {
   state: KioskState;

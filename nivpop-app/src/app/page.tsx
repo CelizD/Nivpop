@@ -1,4 +1,4 @@
-import KioskOverlay from "@/components/kiosk/KioskOverlay";
+import KioskOverlay from "@/features/kiosk/KioskOverlay";
 
 export default function Home() {
   return <KioskOverlay />;

@@ -1,13 +1,13 @@
 "use client";
 import { useState, useEffect, useCallback, useRef } from "react";
-import type { NivResult, FlavorId } from "@/lib/types";
-import { FLAVORS, FLAVOR_EMOJI } from "@/lib/flavors";
-import { FLAVOR_HEX } from "@/lib/colors";
+import type { NivResult, FlavorId } from "@/types";
+import { FLAVORS, FLAVOR_EMOJI } from "@/utils/flavors";
+import { FLAVOR_HEX } from "@/utils/colors";
 import {
   getResults, getConfig, getKiosko, setKiosko, getStock, setStock,
   getSeasonal, setSeasonal, getQOverrides, setQOverrides, applyQOverrides,
-} from "@/lib/storage";
-import { QP, QT } from "@/lib/questions";
+} from "@/services/storage";
+import { QP, QT } from "@/utils/questions";
 
 const ALL_IDS   = Object.keys(FLAVORS) as FlavorId[];
 const DEFAULT_PIN = "1234";

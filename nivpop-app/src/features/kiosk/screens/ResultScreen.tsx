@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
-import type { KioskState } from "@/lib/types";
-import { FLAVORS, FLAVOR_EMOJI, AL_META } from "@/lib/flavors";
-import { FLAVOR_HEX } from "@/lib/colors";
-import { calcTopFlavors } from "@/lib/quiz";
+import type { KioskState } from "@/types";
+import { FLAVORS, FLAVOR_EMOJI, AL_META } from "@/utils/flavors";
+import { FLAVOR_HEX } from "@/utils/colors";
+import { calcTopFlavors } from "@/utils/quiz";
 
 const EMAIL_SVC  = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID  ?? "";
 const EMAIL_TPL  = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID ?? "";

@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import type { FlavorId, KioskScreen } from "@/lib/types";
+import type { FlavorId, KioskScreen } from "@/types";
 import { useKiosk } from "@/hooks/useKiosk";
-import { getKiosko } from "@/lib/storage";
+import { getKiosko } from "@/services/storage";
 import WelcomeScreen      from "./screens/WelcomeScreen";
 import ModeScreen         from "./screens/ModeScreen";
 import NameScreen         from "./screens/NameScreen";

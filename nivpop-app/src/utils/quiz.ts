@@ -1,5 +1,5 @@
-import type { FlavorId, FlavorScores, QuizQuestion, QuizOption } from "./types";
-import { AFFINITY } from "./flavors";
+import type { FlavorId, FlavorScores, QuizQuestion, QuizOption } from "@/types";
+import { AFFINITY } from "@/utils/flavors";
 
 export function mkScores(activeIds: FlavorId[]): FlavorScores {
   return Object.fromEntries(activeIds.map((k) => [k, 0]));

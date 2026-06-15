@@ -1,9 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
-import type { FlavorId } from "@/lib/types";
-import { FLAVORS, FLAVOR_EMOJI, TEMPORADA } from "@/lib/flavors";
-import { FLAVOR_HEX } from "@/lib/colors";
-import { getStock } from "@/lib/storage";
+import type { FlavorId } from "@/types";
+import { FLAVORS, FLAVOR_EMOJI, TEMPORADA } from "@/utils/flavors";
+import { FLAVOR_HEX } from "@/utils/colors";
+import { getStock } from "@/services/storage";
 
 const ALL_IDS = Object.keys(FLAVORS) as FlavorId[];
 

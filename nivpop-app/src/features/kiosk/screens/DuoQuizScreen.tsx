@@ -1,34 +1,19 @@
 "use client";
-import { useEffect, useRef } from "react";
-import type { KioskState, QuizQuestion } from "@/lib/types";
+import { useRef } from "react";
+import type { KioskState } from "@/types";
 
 interface Props {
   state: KioskState;
-  questions: QuizQuestion[];
   onAnswer: (idx: number) => void;
   onBack: () => void;
 }
 
-export default function QuizScreen({ state, questions, onAnswer, onBack }: Props) {
-  const q        = questions[state.curQ];
-  const total    = questions.length;
-  const progress = (state.curQ / total) * 100;
+export default function DuoQuizScreen({ state, onAnswer, onBack }: Props) {
+  const { dQuestions, dCurQ, dN1, dN2 } = state;
+  const q        = dQuestions[dCurQ];
+  const total    = dQuestions.length;
+  const progress = (dCurQ / total) * 100;
   const touchX   = useRef(0);
-
-  // Keyboard: press 1–8 to pick an option
-  useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if ((e.target as HTMLElement).tagName === "INPUT") return;
-      const n = parseInt(e.key);
-      if (!isNaN(n) && n >= 1 && n <= q.o.length) {
-        navigator.vibrate?.(8);
-        onAnswer(n - 1);
-      }
-      if (e.key === "ArrowLeft" || e.key === "Backspace") onBack();
-    }
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [q, onAnswer, onBack]);
 
   function handleAnswer(i: number) {
     navigator.vibrate?.(8);
@@ -43,19 +28,20 @@ export default function QuizScreen({ state, questions, onAnswer, onBack }: Props
       onTouchStart={(e) => { touchX.current = e.touches[0].clientX; }}
       onTouchEnd={(e) => {
         const dx = e.changedTouches[0].clientX - touchX.current;
-        if (dx > 70 && state.curQ > 0) onBack();
+        if (dx > 70 && dCurQ > 0) onBack();
       }}
     >
-      {/* Progress */}
       <div className="h-[2px] bg-paper/10 flex-shrink-0">
         <div className="h-full bg-paper/50 transition-all duration-500" style={{ width: `${progress}%` }} />
       </div>
 
       <div className="flex-1 flex flex-col px-7 py-10 overflow-y-auto">
         <div className="mb-10">
-          <p className="font-sans text-[9px] tracking-[0.4em] text-muted/60 uppercase mb-5">
-            {state.curQ + 1} / {total}
-          </p>
+          <div className="flex items-center gap-3 mb-5">
+            <span className="font-sans text-[9px] tracking-[0.4em] text-muted/60 uppercase">{dCurQ + 1} / {total}</span>
+            <span className="text-muted/30">·</span>
+            <span className="font-sans text-[9px] tracking-[0.3em] text-muted/50 uppercase">{dN1} & {dN2}</span>
+          </div>
           <h2 className="font-display text-[1.7rem] leading-snug text-paper italic">{q.q}</h2>
         </div>
 
@@ -74,7 +60,7 @@ export default function QuizScreen({ state, questions, onAnswer, onBack }: Props
           ))}
         </div>
 
-        {state.curQ > 0 && (
+        {dCurQ > 0 && (
           <button onClick={onBack} className="mt-8 font-sans text-xs text-muted/50 tracking-widest uppercase hover:text-muted transition-colors self-start">
             ← Anterior
           </button>

@@ -1,4 +1,4 @@
-import type { QuizQuestion } from "./types";
+import type { QuizQuestion } from "@/types";
 
 export const QP: QuizQuestion[] = [
   {q:"¿Cómo prefieres pasar tu tiempo libre?",o:[{t:"Con personas que me llenen de energía",s:{fresa:3,miel:1}},{t:"En calma, sin mucho estímulo externo",s:{vainilla:3,matcha:1}},{t:"Explorando algo nuevo — un lugar o una idea",s:{menta:3,yuzu:1}},{t:"A solas con mis pensamientos",s:{choco:3,earl:1}},{t:"En una aventura espontánea sin plan",s:{mango:3}},{t:"Creando algo — arte, escritura o música",s:{lavanda:3,carda:1}},{t:"Con un ritual consciente — meditación, lectura",s:{matcha:3}},{t:"Cocinando o recibiendo a personas queridas",s:{chai:3,platano:1}}]},

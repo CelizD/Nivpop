@@ -1,14 +1,14 @@
 "use client";
 
 import { useReducer, useCallback } from "react";
-import type { KioskState, KioskAction, FlavorId, VinculoId, QuizQuestion } from "@/lib/types";
-import { mkScores, calcResult, calcCompat, genFolio, applyAnswer, buildDuoQuestions } from "@/lib/quiz";
-import { FLAVORS } from "@/lib/flavors";
-import { QP, QT } from "@/lib/questions";
+import type { KioskState, KioskAction, FlavorId, VinculoId, QuizQuestion } from "@/types";
+import { mkScores, calcResult, calcCompat, genFolio, applyAnswer, buildDuoQuestions } from "@/utils/quiz";
+import { FLAVORS } from "@/utils/flavors";
+import { QP, QT } from "@/utils/questions";
 import {
   saveResultWithScores, getActiveFlavors, addStamp,
   getQOverrides, applyQOverrides, findByName,
-} from "@/lib/storage";
+} from "@/services/storage";
 
 const ALL_IDS = Object.keys(FLAVORS) as FlavorId[];
 

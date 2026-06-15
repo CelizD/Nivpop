@@ -1,7 +1,7 @@
 "use client";
-import type { FlavorId } from "@/lib/types";
-import { FLAVORS, FLAVOR_EMOJI, AL_META } from "@/lib/flavors";
-import { FLAVOR_HEX } from "@/lib/colors";
+import type { FlavorId } from "@/types";
+import { FLAVORS, FLAVOR_EMOJI, AL_META } from "@/utils/flavors";
+import { FLAVOR_HEX } from "@/utils/colors";
 
 interface Props {
   flavorId: FlavorId;

@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
-import { findByFolio, findByName } from "@/lib/storage";
-import { FLAVORS, FLAVOR_EMOJI } from "@/lib/flavors";
-import { FLAVOR_HEX } from "@/lib/colors";
-import type { NivResult } from "@/lib/types";
+import { findByFolio, findByName } from "@/services/storage";
+import { FLAVORS, FLAVOR_EMOJI } from "@/utils/flavors";
+import { FLAVOR_HEX } from "@/utils/colors";
+import type { NivResult } from "@/types";
 
 interface Props {
   onBack: () => void;

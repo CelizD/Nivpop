@@ -1,9 +1,9 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
-import type { FlavorId, NivResult } from "@/lib/types";
-import { FLAVORS, FLAVOR_EMOJI } from "@/lib/flavors";
-import { FLAVOR_HEX } from "@/lib/colors";
-import { getResults, getResultCount } from "@/lib/storage";
+import type { FlavorId, NivResult } from "@/types";
+import { FLAVORS, FLAVOR_EMOJI } from "@/utils/flavors";
+import { FLAVOR_HEX } from "@/utils/colors";
+import { getResults, getResultCount } from "@/services/storage";
 
 function useClock() {
   const [time, setTime] = useState("");

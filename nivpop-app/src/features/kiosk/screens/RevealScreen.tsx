@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import type { FlavorId } from "@/lib/types";
-import { FLAVORS, FLAVOR_EMOJI } from "@/lib/flavors";
-import { FLAVOR_HEX } from "@/lib/colors";
+import type { FlavorId } from "@/types";
+import { FLAVORS, FLAVOR_EMOJI } from "@/utils/flavors";
+import { FLAVOR_HEX } from "@/utils/colors";
 import Confetti from "@/components/Confetti";
 
 interface Props {

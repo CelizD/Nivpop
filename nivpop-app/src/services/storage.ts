@@ -1,4 +1,4 @@
-import type { NivResult, FlavorId, FlavorScores } from "./types";
+import type { NivResult, FlavorId, FlavorScores } from "@/types";
 
 const KEYS = {
   results:  "nivpop_results",
@@ -59,7 +59,7 @@ export function saveResult(
 }
 
 async function saveResultToSupabase(r: NivResult) {
-  const { supabase } = await import("./supabase");
+  const { supabase } = await import("@/services/supabase");
   if (!supabase) return;
   const now = new Date();
   const row: Record<string, unknown> = {
@@ -216,7 +216,7 @@ export function saveResultWithScores(
   const record = saveResult(r);
   // Enrich the Supabase row with scores (best-effort)
   if ((scores || scores1) && typeof window !== "undefined") {
-    import("./supabase").then(({ supabase }) => {
+    import("@/services/supabase").then(({ supabase }) => {
       if (!supabase) return;
       const patch: Record<string, unknown> = {};
       if (scores)  patch.scores  = scores;

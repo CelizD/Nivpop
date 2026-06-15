@@ -1,8 +1,8 @@
 "use client";
-import type { KioskState } from "@/lib/types";
-import { FLAVORS, FLAVOR_EMOJI, DUO_ALL, DUO_TIP, VINCULOS } from "@/lib/flavors";
-import { FLAVOR_HEX } from "@/lib/colors";
-import { calcTopFlavors } from "@/lib/quiz";
+import type { KioskState } from "@/types";
+import { FLAVORS, FLAVOR_EMOJI, DUO_ALL, DUO_TIP, VINCULOS } from "@/utils/flavors";
+import { FLAVOR_HEX } from "@/utils/colors";
+import { calcTopFlavors } from "@/utils/quiz";
 
 interface Props {
   state: KioskState;
