@@ -64,6 +64,8 @@ export interface KioskState {
   hist: Array<{ q: number; scores: FlavorScores }>;
   rKey: FlavorId;
   testMode: "p" | "t";
+  quickMode: boolean;
+  prevFlavorId?: FlavorId;
   // duo
   dN1: string; dN2: string; dVin: VinculoId | "";
   dScores: FlavorScores; dScores1: FlavorScores; dScores2: FlavorScores;
@@ -79,6 +81,8 @@ export interface KioskState {
 export type KioskAction =
   | { type: "GO"; screen: KioskScreen }
   | { type: "SET_MODE"; testMode: "p" | "t" }
+  | { type: "SET_QUICK_MODE"; quickMode: boolean }
+  | { type: "SET_PREV_FLAVOR"; prevFlavorId: FlavorId }
   | { type: "SET_NAME"; name: string }
   | { type: "SET_DUO_NAMES"; dN1: string; dN2: string }
   | { type: "SET_VIN"; dVin: VinculoId }

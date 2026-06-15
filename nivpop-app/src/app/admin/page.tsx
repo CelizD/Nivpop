@@ -96,6 +96,7 @@ export default function AdminPage() {
   const [qOverP, setQOverP] = useState<Record<number, { q?: string; o?: Record<number, string> }>>({});
   const [qOverT, setQOverT] = useState<Record<number, { q?: string; o?: Record<number, string> }>>({});
   const [qTab,   setQTab]   = useState<"p" | "t">("p");
+  const [welcomeQR, setWelcomeQR] = useState("");
 
   const refresh = useCallback(() => {
     setResults(getResults());
@@ -114,6 +115,16 @@ export default function AdminPage() {
   }, []);
 
   useEffect(() => { if (unlocked) refresh(); }, [unlocked, refresh]);
+
+  // Generate welcome QR once unlocked
+  useEffect(() => {
+    if (!unlocked) return;
+    const url = window.location.origin;
+    import("qrcode").then(({ default: QRCode }) => {
+      QRCode.toDataURL(url, { width: 200, margin: 1, color: { dark: "#16120d", light: "#faf9f6" } })
+        .then(setWelcomeQR).catch(() => {});
+    }).catch(() => {});
+  }, [unlocked]);
 
   function flash(msg: string) { setStatusMsg(msg); setTimeout(() => setStatusMsg(""), 2500); }
 
@@ -167,6 +178,21 @@ export default function AdminPage() {
   displayed.forEach((r) => { hourly[r.hora] = (hourly[r.hora] ?? 0) + 1; });
   const maxHourly = Math.max(...Object.values(hourly), 1);
   const activeHours = Array.from({ length: 24 }, (_, i) => i).filter((h) => hourly[h] > 0);
+
+  // Peak insights
+  const WEEKDAYS = ["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"];
+  const dayCount: Record<number, number> = {};
+  displayed.forEach((r) => {
+    const ts = parseInt(r.id.split("-")[0]);
+    if (!isNaN(ts)) {
+      const d = new Date(ts).getDay();
+      dayCount[d] = (dayCount[d] ?? 0) + 1;
+    }
+  });
+  const topHourEntry  = Object.entries(hourly).sort((a, b) => b[1] - a[1])[0];
+  const topDayEntry   = Object.entries(dayCount).sort((a, b) => b[1] - a[1])[0];
+  const peakHour      = topHourEntry ? `${topHourEntry[0]}:00 h (${topHourEntry[1]} visitas)` : null;
+  const peakDay       = topDayEntry  ? `${WEEKDAYS[parseInt(topDayEntry[0])]} (${topDayEntry[1]} visitas)` : null;
 
   const dateLabel = dateFilter === "today" ? "Hoy" : dateFilter === "week" ? "Últimos 7 días" : dateFilter === "month" ? "Últimos 30 días" : "Todos los tiempos";
 
@@ -390,6 +416,24 @@ export default function AdminPage() {
                     </div>
                   ))}
                 </div>
+              </div>
+            )}
+
+            {/* Peak insights */}
+            {(peakHour || peakDay) && (
+              <div className="grid grid-cols-2 gap-3">
+                {peakHour && (
+                  <div className="border border-paper/10 px-4 py-4">
+                    <p className="text-[8px] tracking-widest text-muted/50 uppercase mb-1">HORA PICO</p>
+                    <p className="text-sm text-paper/80">{peakHour}</p>
+                  </div>
+                )}
+                {peakDay && (
+                  <div className="border border-paper/10 px-4 py-4">
+                    <p className="text-[8px] tracking-widest text-muted/50 uppercase mb-1">DÍA MÁS ACTIVO</p>
+                    <p className="text-sm text-paper/80">{peakDay}</p>
+                  </div>
+                )}
               </div>
             )}
 
@@ -632,6 +676,30 @@ export default function AdminPage() {
                 className="font-sans text-[11px] tracking-[0.4em] uppercase text-ink bg-paper px-10 py-4 hover:bg-paper/90 active:scale-95 transition-all"
               >{statusMsg || "GUARDAR CAMBIOS"}</button>
             </form>
+
+            {/* Welcome QR */}
+            {welcomeQR && (
+              <div className="border-t border-paper/10 pt-8">
+                <p className="text-[9px] tracking-[0.4em] text-muted/50 uppercase mb-1">QR DE BIENVENIDA</p>
+                <p className="text-[10px] text-muted/35 mb-5">Imprime y coloca en el mostrador para que los clientes abran el kiosco en su celular.</p>
+                <div className="flex flex-col items-center gap-4">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={welcomeQR} alt="QR kiosco" className="w-36 h-36 border border-paper/15 p-2" />
+                  <p className="font-sans text-xs text-muted/40 text-center">{window.location.origin}</p>
+                  <button
+                    onClick={() => {
+                      const a = document.createElement("a");
+                      a.href = welcomeQR;
+                      a.download = "nivpop-qr-bienvenida.png";
+                      a.click();
+                    }}
+                    className="font-sans text-[10px] tracking-[0.3em] uppercase text-muted/50 border border-paper/15 px-5 py-2.5 hover:border-paper/30 hover:text-muted transition-all"
+                  >
+                    DESCARGAR QR
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* Backup / Restore */}
             <div className="border-t border-paper/10 pt-8 space-y-4">

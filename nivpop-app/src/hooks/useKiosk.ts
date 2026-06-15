@@ -5,7 +5,10 @@ import type { KioskState, KioskAction, FlavorId, VinculoId, QuizQuestion } from 
 import { mkScores, calcResult, calcCompat, genFolio, applyAnswer, buildDuoQuestions } from "@/lib/quiz";
 import { FLAVORS } from "@/lib/flavors";
 import { QP, QT } from "@/lib/questions";
-import { saveResultWithScores, getActiveFlavors, addStamp, getQOverrides, applyQOverrides } from "@/lib/storage";
+import {
+  saveResultWithScores, getActiveFlavors, addStamp,
+  getQOverrides, applyQOverrides, findByName,
+} from "@/lib/storage";
 
 const ALL_IDS = Object.keys(FLAVORS) as FlavorId[];
 
@@ -18,7 +21,8 @@ function initialState(): KioskState {
   const ids = ALL_IDS;
   return {
     screen: "welcome",
-    cName: "", scores: mkScores(ids), curQ: 0, hist: [], rKey: "fresa" as FlavorId, testMode: "p",
+    cName: "", scores: mkScores(ids), curQ: 0, hist: [],
+    rKey: "fresa" as FlavorId, testMode: "p", quickMode: false, prevFlavorId: undefined,
     dN1: "", dN2: "", dVin: "", dScores: mkScores(ids), dScores1: mkScores(ids), dScores2: mkScores(ids),
     dCurQ: 0, dHist: [], dRKey: "fresa" as FlavorId, dQuestions: [],
     lastCompat: 0, folio: "", shareMode: "solo",
@@ -27,13 +31,15 @@ function initialState(): KioskState {
 
 function reducer(state: KioskState, action: KioskAction): KioskState {
   switch (action.type) {
-    case "GO":            return { ...state, screen: action.screen };
-    case "SET_MODE":      return { ...state, testMode: action.testMode };
-    case "SET_NAME":      return { ...state, cName: action.name };
-    case "SET_DUO_NAMES": return { ...state, dN1: action.dN1, dN2: action.dN2 };
-    case "SET_VIN":       return { ...state, dVin: action.dVin };
-    case "ANSWER_SOLO":   return { ...state, scores: action.scores, curQ: action.curQ };
-    case "PUSH_HIST_SOLO":return { ...state, hist: [...state.hist, action.entry] };
+    case "GO":              return { ...state, screen: action.screen };
+    case "SET_MODE":        return { ...state, testMode: action.testMode };
+    case "SET_QUICK_MODE":  return { ...state, quickMode: action.quickMode };
+    case "SET_PREV_FLAVOR": return { ...state, prevFlavorId: action.prevFlavorId };
+    case "SET_NAME":        return { ...state, cName: action.name };
+    case "SET_DUO_NAMES":   return { ...state, dN1: action.dN1, dN2: action.dN2 };
+    case "SET_VIN":         return { ...state, dVin: action.dVin };
+    case "ANSWER_SOLO":     return { ...state, scores: action.scores, curQ: action.curQ };
+    case "PUSH_HIST_SOLO":  return { ...state, hist: [...state.hist, action.entry] };
     case "POP_HIST_SOLO": {
       const hist = [...state.hist];
       const prev = hist.pop();
@@ -55,7 +61,7 @@ function reducer(state: KioskState, action: KioskAction): KioskState {
     case "SET_SHARE_MODE": return { ...state, shareMode: action.shareMode };
     case "RESET_SOLO": {
       const ids = getActiveIds();
-      return { ...state, cName: "", scores: mkScores(ids), curQ: 0, hist: [], rKey: "fresa" as FlavorId };
+      return { ...state, cName: "", scores: mkScores(ids), curQ: 0, hist: [], rKey: "fresa" as FlavorId, quickMode: false, prevFlavorId: undefined };
     }
     case "RESET_DUO": {
       const ids = getActiveIds();
@@ -128,6 +134,13 @@ export function useKiosk() {
   }, [go]);
 
   const finishSolo = useCallback((state: KioskState) => {
+    // Check for previous result with same name BEFORE saving
+    const prevResults = findByName(state.cName).filter((r) => r.modo !== "duo");
+    const prevFlavor  = prevResults[0]?.flavorId;
+    if (prevFlavor && prevFlavor !== state.rKey) {
+      dispatch({ type: "SET_PREV_FLAVOR", prevFlavorId: prevFlavor as FlavorId });
+    }
+
     const f = FLAVORS[state.rKey];
     const folio = genFolio();
     dispatch({ type: "SET_FOLIO", folio });
@@ -155,6 +168,7 @@ export function useKiosk() {
     const ids = getActiveIds();
     const rKey = ids[Math.floor(Math.random() * ids.length)] as FlavorId;
     dispatch({ type: "SET_MODE", testMode: "p" });
+    dispatch({ type: "SET_QUICK_MODE", quickMode: false });
     dispatch({ type: "SET_NAME", name });
     dispatch({ type: "SET_RESULT", rKey });
     go("loading");
@@ -166,7 +180,6 @@ export function useKiosk() {
   }, [go]);
 
   const showTicket = useCallback(() => {
-    // folio already set in finishSolo/finishDuo
     go(state.shareMode === "duo" ? "duo-ticket" : "ticket");
   }, [go, state.shareMode]);
 
@@ -175,9 +188,11 @@ export function useKiosk() {
     go("welcome");
   }, [go]);
 
-  // Apply custom question overrides from localStorage
+  // Apply custom question overrides; limit to 5 questions in quick mode
   const ov = typeof window !== "undefined" ? getQOverrides() : {};
-  const questions = applyQOverrides(state.testMode === "p" ? QP : QT, state.testMode === "p" ? ov.p : ov.t);
+  const baseQs = state.testMode === "p" ? QP : QT;
+  const limitedQs = state.quickMode ? baseQs.slice(0, 5) : baseQs;
+  const questions = applyQOverrides(limitedQs, state.testMode === "p" ? ov.p : ov.t);
 
   return {
     state, dispatch, go,

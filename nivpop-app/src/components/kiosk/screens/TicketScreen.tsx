@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import type { KioskState } from "@/lib/types";
 import { FLAVORS, FLAVOR_EMOJI } from "@/lib/flavors";
 import { FLAVOR_HEX } from "@/lib/colors";
@@ -22,14 +22,28 @@ export default function TicketScreen({ state, duo, onReset }: Props) {
   const date   = now.toLocaleDateString("es-MX", { day: "2-digit", month: "long", year: "numeric" });
   const time   = `${now.getHours()}:${String(now.getMinutes()).padStart(2, "0")}`;
 
-  const name1  = duo ? state.dN1 : state.cName;
-  const name2  = duo ? state.dN2 : undefined;
+  const name1     = duo ? state.dN1 : state.cName;
+  const name2     = duo ? state.dN2 : undefined;
   const modeLabel = duo ? "DÚO" : state.testMode === "p" ? "PERSONALIDAD" : "ESTADO";
 
-  // Stamp info
   const stamps    = getStamps();
   const stampsNow = stamps % STAMP_GOAL;
   const hasReward = stamps > 0 && stampsNow === 0;
+
+  const [qrUrl, setQrUrl] = useState<string>("");
+
+  // Generate QR linking to kiosk folio lookup
+  useEffect(() => {
+    if (!state.folio) return;
+    const url = `${window.location.origin}/?q=${encodeURIComponent(state.folio)}`;
+    import("qrcode").then(({ default: QRCode }) => {
+      QRCode.toDataURL(url, {
+        width:  100,
+        margin: 1,
+        color:  { dark: "#16120d", light: "#faf9f6" },
+      }).then(setQrUrl).catch(() => {});
+    }).catch(() => {});
+  }, [state.folio]);
 
   // Auto-print when kiosk config requests it
   useEffect(() => {
@@ -56,9 +70,7 @@ export default function TicketScreen({ state, duo, onReset }: Props) {
           <p className="font-sans text-[9px] tracking-[0.6em] text-muted/60 uppercase mb-6">NIV&apos;POP · HELADOS ARTESANALES</p>
 
           <div className="text-5xl mb-4">{emoji}</div>
-          <h2 className="font-display text-3xl font-light mb-1" style={{ color: hex }}>
-            {f.name}
-          </h2>
+          <h2 className="font-display text-3xl font-light mb-1" style={{ color: hex }}>{f.name}</h2>
           {!duo && <p className="font-display text-base italic text-paper/50 mb-4">{f.persona}</p>}
 
           {duo && (
@@ -72,9 +84,7 @@ export default function TicketScreen({ state, duo, onReset }: Props) {
             </p>
           )}
 
-          {!duo && name1 && (
-            <p className="font-sans text-base text-paper/80 mb-4">{name1}</p>
-          )}
+          {!duo && name1 && <p className="font-sans text-base text-paper/80 mb-4">{name1}</p>}
 
           <div className="border-t border-dashed border-paper/15 my-5" />
 
@@ -86,6 +96,15 @@ export default function TicketScreen({ state, duo, onReset }: Props) {
               <div className="border-t border-dashed border-paper/15 my-5" />
               <p className="font-sans text-[9px] tracking-[0.4em] text-muted/40 uppercase mb-1">FOLIO</p>
               <p className="font-sans text-base text-paper/60 tracking-widest">{state.folio}</p>
+
+              {/* QR code */}
+              {qrUrl && (
+                <div className="mt-4 flex flex-col items-center gap-1">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={qrUrl} alt="QR folio" className="w-20 h-20 opacity-60" />
+                  <p className="font-sans text-[8px] text-muted/30 tracking-wide">Escanea para ver tu resultado</p>
+                </div>
+              )}
             </>
           )}
 
@@ -106,17 +125,10 @@ export default function TicketScreen({ state, duo, onReset }: Props) {
                   </p>
                   <div className="flex justify-center gap-1.5">
                     {Array.from({ length: STAMP_GOAL }).map((_, i) => (
-                      <div
-                        key={i}
-                        className={`w-2.5 h-2.5 rounded-full border ${
-                          i < stampsNow ? "border-paper/60 bg-paper/60" : "border-paper/20"
-                        }`}
-                      />
+                      <div key={i} className={`w-2.5 h-2.5 rounded-full border ${i < stampsNow ? "border-paper/60 bg-paper/60" : "border-paper/20"}`} />
                     ))}
                   </div>
-                  <p className="font-sans text-[9px] text-muted/35 mt-1.5">
-                    {STAMP_GOAL - stampsNow} más para un regalo
-                  </p>
+                  <p className="font-sans text-[9px] text-muted/35 mt-1.5">{STAMP_GOAL - stampsNow} más para un regalo</p>
                 </div>
               )}
             </>
@@ -131,22 +143,16 @@ export default function TicketScreen({ state, duo, onReset }: Props) {
 
       {/* Actions */}
       <div className="w-full max-w-xs mt-8 space-y-3 no-print">
-        <button
-          onClick={() => window.print()}
-          className="w-full font-sans text-[11px] tracking-[0.4em] uppercase text-ink bg-paper py-4 hover:bg-paper/90 active:scale-95 transition-all duration-150"
-        >
+        <button onClick={() => window.print()}
+          className="w-full font-sans text-[11px] tracking-[0.4em] uppercase text-ink bg-paper py-4 hover:bg-paper/90 active:scale-95 transition-all duration-150">
           IMPRIMIR
         </button>
-        <button
-          onClick={handleCopy}
-          className="w-full font-sans text-[11px] tracking-[0.4em] uppercase text-paper/70 border border-paper/20 py-4 hover:border-paper/40 active:scale-95 transition-all duration-150"
-        >
+        <button onClick={handleCopy}
+          className="w-full font-sans text-[11px] tracking-[0.4em] uppercase text-paper/70 border border-paper/20 py-4 hover:border-paper/40 active:scale-95 transition-all duration-150">
           COPIAR TEXTO
         </button>
-        <button
-          onClick={onReset}
-          className="w-full font-sans text-[11px] tracking-[0.4em] uppercase text-paper/40 py-3 hover:text-paper/60 active:scale-95 transition-all duration-150"
-        >
+        <button onClick={onReset}
+          className="w-full font-sans text-[11px] tracking-[0.4em] uppercase text-paper/40 py-3 hover:text-paper/60 active:scale-95 transition-all duration-150">
           NUEVA VISITA
         </button>
       </div>

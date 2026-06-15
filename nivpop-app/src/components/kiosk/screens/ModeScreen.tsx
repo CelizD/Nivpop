@@ -1,17 +1,13 @@
 "use client";
 
-const MODES = [
-  { key: "p" as const, emoji: "✨", title: "Solo — Personalidad", sub: "Descubre tu sabor único basado en quién eres" },
-  { key: "t" as const, emoji: "🌊", title: "Solo — Estado de ánimo", sub: "¿Cómo te sientes hoy?" },
-];
-
 interface Props {
   onSolo: (mode: "p" | "t") => void;
   onDuo: () => void;
+  onQuick: () => void;
   onBack: () => void;
 }
 
-export default function ModeScreen({ onSolo, onDuo, onBack }: Props) {
+export default function ModeScreen({ onSolo, onDuo, onQuick, onBack }: Props) {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen px-6 py-16">
       <h2 className="font-display text-4xl text-paper italic mb-14 text-center">
@@ -19,17 +15,23 @@ export default function ModeScreen({ onSolo, onDuo, onBack }: Props) {
       </h2>
 
       <div className="w-full max-w-md space-y-4">
-        {MODES.map((m) => (
-          <button
-            key={m.key}
-            onClick={() => onSolo(m.key)}
-            className="w-full text-left border border-paper/15 bg-paper/[0.04] hover:bg-paper/10 active:scale-[0.98] transition-all duration-150 px-7 py-6 group"
-          >
-            <span className="text-2xl mb-2 block">{m.emoji}</span>
-            <p className="font-sans text-base font-medium text-paper mb-1">{m.title}</p>
-            <p className="font-sans text-xs text-muted leading-relaxed">{m.sub}</p>
-          </button>
-        ))}
+        <button
+          onClick={() => onSolo("p")}
+          className="w-full text-left border border-paper/15 bg-paper/[0.04] hover:bg-paper/10 active:scale-[0.98] transition-all duration-150 px-7 py-6 group"
+        >
+          <span className="text-2xl mb-2 block">✨</span>
+          <p className="font-sans text-base font-medium text-paper mb-1">Solo — Personalidad</p>
+          <p className="font-sans text-xs text-muted leading-relaxed">Descubre tu sabor único basado en quién eres</p>
+        </button>
+
+        <button
+          onClick={() => onSolo("t")}
+          className="w-full text-left border border-paper/15 bg-paper/[0.04] hover:bg-paper/10 active:scale-[0.98] transition-all duration-150 px-7 py-6"
+        >
+          <span className="text-2xl mb-2 block">🌊</span>
+          <p className="font-sans text-base font-medium text-paper mb-1">Solo — Estado de ánimo</p>
+          <p className="font-sans text-xs text-muted leading-relaxed">¿Cómo te sientes hoy?</p>
+        </button>
 
         <button
           onClick={onDuo}
@@ -38,6 +40,19 @@ export default function ModeScreen({ onSolo, onDuo, onBack }: Props) {
           <span className="text-2xl mb-2 block">💞</span>
           <p className="font-sans text-base font-medium text-paper mb-1">Dúo</p>
           <p className="font-sans text-xs text-muted leading-relaxed">¿Cuál es el sabor compartido de los dos?</p>
+        </button>
+
+        <button
+          onClick={onQuick}
+          className="w-full text-left border border-paper/10 bg-transparent hover:bg-paper/5 active:scale-[0.98] transition-all duration-150 px-7 py-5"
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-sans text-sm text-paper/70 mb-0.5">⚡ Quiz rápido</p>
+              <p className="font-sans text-xs text-muted/55">5 preguntas · mismo resultado</p>
+            </div>
+            <span className="font-sans text-[9px] tracking-[0.3em] uppercase text-muted/40 border border-paper/15 px-2 py-1">RÁPIDO</span>
+          </div>
         </button>
       </div>
 

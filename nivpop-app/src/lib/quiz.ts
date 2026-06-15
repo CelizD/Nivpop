@@ -19,6 +19,12 @@ export function calcResult(scores: FlavorScores): FlavorId {
   return pool.sort((a, b) => b[1] - a[1])[0][0] as FlavorId;
 }
 
+export function calcTopFlavors(scores: FlavorScores, n = 3): FlavorId[] {
+  const entries = Object.entries(scores).filter(([, v]) => v > 0);
+  const pool = entries.length ? entries : Object.entries(scores);
+  return pool.sort((a, b) => b[1] - a[1]).slice(0, n).map(([k]) => k as FlavorId);
+}
+
 export function calcCompat(s1: FlavorScores, s2: FlavorScores): number {
   const k1 = calcResult(s1);
   const k2 = calcResult(s2);

@@ -42,6 +42,7 @@ const config: Config = {
         "slide-back":    "slideBack .28s cubic-bezier(.22,1,.36,1) forwards",
         "pulse-slow":    "pulse 2.5s ease infinite",
         "countdown":     "countdown 45s linear forwards",
+        "confetti-fall": "confettiFall 2.5s ease-in forwards",
       },
       keyframes: {
         fadeIn:       { from: { opacity: "0" }, to: { opacity: "1" } },
@@ -49,6 +50,11 @@ const config: Config = {
         slideForward: { from: { opacity: "0.5", transform: "translateX(48px)"  }, to: { opacity: "1", transform: "translateX(0)" } },
         slideBack:    { from: { opacity: "0.5", transform: "translateX(-48px)" }, to: { opacity: "1", transform: "translateX(0)" } },
         countdown:    { from: { transform: "scaleX(1)" }, to: { transform: "scaleX(0)" } },
+        confettiFall: {
+          "0%":   { transform: "translateY(-20px) rotate(0deg)",   opacity: "1" },
+          "80%":  { opacity: "1" },
+          "100%": { transform: "translateY(110vh) rotate(720deg)", opacity: "0" },
+        },
       },
     },
   },

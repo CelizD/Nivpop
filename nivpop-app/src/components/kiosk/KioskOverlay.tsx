@@ -42,9 +42,23 @@ export default function KioskOverlay() {
 
   const { screen } = state;
   const [catalogFlavorId, setCatalogFlavorId] = useState<FlavorId>("fresa");
-  const [paused,    setPaused]   = useState(false);
-  const [slideDir,  setSlideDir] = useState<"forward" | "back">("forward");
+  const [paused,     setPaused]    = useState(false);
+  const [slideDir,   setSlideDir]  = useState<"forward" | "back">("forward");
+  const [folioQuery, setFolioQuery] = useState("");
   const prevScreen = useRef<KioskScreen>("welcome");
+
+  // Handle ?q=FOLIO URL param — auto-open folio lookup
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get("q");
+    if (q) {
+      setFolioQuery(q);
+      go("folio");
+      // Clean URL without reloading
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const pi = SCREEN_ORDER.indexOf(prevScreen.current);
@@ -82,7 +96,12 @@ export default function KioskOverlay() {
       case "welcome":
         return <WelcomeScreen onStart={() => go("mode")} onCatalog={() => go("catalog")} onSurprise={() => go("name-surprise")} onFolio={() => go("folio")} />;
       case "mode":
-        return <ModeScreen onSolo={(m) => go(m === "p" ? "name-p" : "name-t")} onDuo={() => go("duo-names")} onBack={() => go("welcome")} />;
+        return <ModeScreen
+          onSolo={(m) => { dispatch({ type: "SET_QUICK_MODE", quickMode: false }); go(m === "p" ? "name-p" : "name-t"); }}
+          onDuo={() => go("duo-names")}
+          onQuick={() => { dispatch({ type: "SET_QUICK_MODE", quickMode: true }); go("name-p"); }}
+          onBack={() => go("welcome")}
+        />;
       case "name-p":
         return <NameScreen mode="p" onSubmit={(n) => startSolo("p", n)} onBack={() => go("mode")} />;
       case "name-t":
@@ -92,7 +111,7 @@ export default function KioskOverlay() {
       case "duo-names":
         return <DuoNamesScreen onSubmit={startDuo} onBack={() => go("mode")} />;
       case "folio":
-        return <FolioScreen onBack={() => go("welcome")} />;
+        return <FolioScreen onBack={() => go("welcome")} initialQuery={folioQuery} />;
       case "quiz":
         return <QuizScreen state={state} questions={questions} onAnswer={answerSolo} onBack={() => dispatch({ type: "POP_HIST_SOLO" })} />;
       case "duo-quiz":
