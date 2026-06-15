@@ -3,22 +3,23 @@ import { useEffect, useState } from "react";
 import type { FlavorId } from "@/lib/types";
 import { FLAVOR_EMOJI } from "@/lib/flavors";
 import { FLAVOR_HEX } from "@/lib/colors";
+import { getResults, getResultCount, getStamps } from "@/lib/storage";
 
 const EMOJIS = ["🍓","🍦","🍃","🍫","🥭","💜","🍵","🍯","🫐","🍮","🍋","🌿","☕","🍌","🍷","🌸"];
+const STAMP_GOAL = 5;
 
 interface Props {
   onStart: () => void;
   onCatalog: () => void;
   onSurprise: () => void;
+  onFolio: () => void;
 }
 
 function useFlavorDelDia(): FlavorId | null {
   const [flavor, setFlavor] = useState<FlavorId | null>(null);
   useEffect(() => {
     try {
-      const raw = localStorage.getItem("nivpop_results");
-      if (!raw) return;
-      const results: Array<{ fecha: string; flavorId: string }> = JSON.parse(raw);
+      const results = getResults();
       const today = new Date().toLocaleDateString("es-MX", { day: "2-digit", month: "long", year: "numeric" });
       const todayOnes = results.filter((r) => r.fecha === today);
       if (!todayOnes.length) return;
@@ -31,12 +32,22 @@ function useFlavorDelDia(): FlavorId | null {
   return flavor;
 }
 
-export default function WelcomeScreen({ onStart, onCatalog, onSurprise }: Props) {
+export default function WelcomeScreen({ onStart, onCatalog, onSurprise, onFolio }: Props) {
   const flavorDelDia = useFlavorDelDia();
+  const [totalCount, setTotalCount] = useState(0);
+  const [stamps,     setStamps]     = useState(0);
+
+  useEffect(() => {
+    setTotalCount(getResultCount());
+    setStamps(getStamps());
+  }, []);
+
+  const stampsLeft = STAMP_GOAL - (stamps % STAMP_GOAL);
+  const hasReward  = stamps > 0 && stamps % STAMP_GOAL === 0;
 
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen px-8 py-20 text-center overflow-hidden">
-      {/* Fullscreen hint top-right */}
+      {/* Fullscreen toggle */}
       <button
         onClick={() => {
           if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
@@ -48,7 +59,15 @@ export default function WelcomeScreen({ onStart, onCatalog, onSurprise }: Props)
         ⛶
       </button>
 
-      <div className="mb-14">
+      {/* Folio lookup link */}
+      <button
+        onClick={onFolio}
+        className="absolute top-5 left-5 font-sans text-[9px] text-muted/25 hover:text-muted/50 transition-colors tracking-widest uppercase"
+      >
+        BUSCAR FOLIO
+      </button>
+
+      <div className="mb-12">
         <h1 className="font-display text-8xl font-light tracking-[0.25em] text-paper mb-2">
           NIV&apos;POP
         </h1>
@@ -59,7 +78,7 @@ export default function WelcomeScreen({ onStart, onCatalog, onSurprise }: Props)
 
       {/* Sabor del día */}
       {flavorDelDia && (
-        <div className="mb-8 border border-paper/10 px-5 py-3 flex items-center gap-3">
+        <div className="mb-6 border border-paper/10 px-5 py-3 flex items-center gap-3">
           <span className="text-xl">{FLAVOR_EMOJI[flavorDelDia]}</span>
           <div className="text-left">
             <p className="font-sans text-[8px] tracking-[0.4em] uppercase" style={{ color: FLAVOR_HEX[flavorDelDia] }}>
@@ -70,7 +89,14 @@ export default function WelcomeScreen({ onStart, onCatalog, onSurprise }: Props)
         </div>
       )}
 
-      <div className="mb-14">
+      {/* Visit counter */}
+      {totalCount > 0 && (
+        <p className="font-sans text-[10px] text-muted/35 tracking-widest uppercase mb-8">
+          Ya <span className="text-paper/55">{totalCount.toLocaleString()}</span> personas descubrieron su sabor
+        </p>
+      )}
+
+      <div className="mb-12">
         <p className="font-display text-3xl italic text-paper/80 mb-4 leading-snug">
           Descubre tu sabor de nieve
         </p>
@@ -100,6 +126,33 @@ export default function WelcomeScreen({ onStart, onCatalog, onSurprise }: Props)
           VER CATÁLOGO →
         </button>
       </div>
+
+      {/* Stamp progress */}
+      {stamps > 0 && !hasReward && (
+        <div className="mt-10 flex flex-col items-center gap-2">
+          <div className="flex gap-1.5">
+            {Array.from({ length: STAMP_GOAL }).map((_, i) => (
+              <div
+                key={i}
+                className={`w-3 h-3 rounded-full border transition-colors ${
+                  i < (stamps % STAMP_GOAL) ? "bg-paper/70 border-paper/70" : "border-paper/20"
+                }`}
+              />
+            ))}
+          </div>
+          <p className="font-sans text-[9px] text-muted/30 tracking-widest uppercase">
+            {stampsLeft} visita{stampsLeft !== 1 ? "s" : ""} para tu regalo
+          </p>
+        </div>
+      )}
+
+      {hasReward && (
+        <div className="mt-10 border border-paper/20 px-6 py-4 text-center">
+          <p className="font-sans text-[9px] tracking-[0.4em] text-paper/60 uppercase mb-1">¡Premio desbloqueado!</p>
+          <p className="font-display text-xl italic text-paper/80">10% de descuento en tu próxima compra</p>
+          <p className="font-sans text-[9px] text-muted/40 mt-1">Muestra esta pantalla al cajero</p>
+        </div>
+      )}
 
       <div className="absolute bottom-10 left-0 right-0 text-center pointer-events-none select-none">
         <p className="text-lg text-paper/10 tracking-widest">{EMOJIS.join("  ")}</p>

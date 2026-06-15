@@ -12,7 +12,7 @@ interface Props {
 }
 
 export default function ShareScreen({ state, onBack, onReset }: Props) {
-  const [copied, setCopied]     = useState(false);
+  const [copied,     setCopied]     = useState(false);
   const [imgLoading, setImgLoading] = useState(false);
   const duo   = state.shareMode === "duo";
   const key   = duo ? state.dRKey : state.rKey;
@@ -24,8 +24,6 @@ export default function ShareScreen({ state, onBack, onReset }: Props) {
     ? `\u{1F49E} Nuestro sabor compartido en NIV'POP\n\n${emoji} ${f.name}\n${state.dN1} & ${state.dN2}\nCompatibilidad: ${state.lastCompat}%\n\n"${f.ins.hl}"\n\n#NivPop #SaborCompartido`
     : `\u{1F366} Mi perfil de nieve en NIV'POP\n\n${emoji} ${f.name} — ${f.persona}${state.cName ? `\n${state.cName}` : ""}\n\n"${f.ins.hl}"\n\n#NivPop`;
 
-  const waUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
-
   async function handleCopy() {
     try {
       await navigator.clipboard.writeText(shareText);
@@ -34,33 +32,47 @@ export default function ShareScreen({ state, onBack, onReset }: Props) {
     } catch { /* unavailable */ }
   }
 
-  async function handleNative() {
-    try {
-      await navigator.share({ text: shareText, title: `NIV'POP — ${f.name}` });
-    } catch { /* cancelled */ }
-  }
-
-  function handleDownloadCard() {
+  // Share image as a file (modern Web Share API)
+  async function handleShareImage() {
     setImgLoading(true);
     try {
       const dataUrl = generateShareCard({
         flavorId: key,
-        name:  !duo ? (state.cName || undefined) : undefined,
+        name:   !duo ? (state.cName || undefined) : undefined,
         duo,
-        n1:    duo ? state.dN1 : undefined,
-        n2:    duo ? state.dN2 : undefined,
+        n1:     duo ? state.dN1 : undefined,
+        n2:     duo ? state.dN2 : undefined,
         compat: duo ? state.lastCompat : undefined,
       });
-      const a = document.createElement("a");
-      a.href = dataUrl;
-      a.download = `nivpop-${key}.png`;
-      a.click();
-    } finally {
+
+      const blob = await (await fetch(dataUrl)).blob();
+      const file = new File([blob], `nivpop-${key}.png`, { type: "image/png" });
+
+      if (navigator.canShare?.({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: `NIV'POP — ${f.name}`,
+          text:  shareText,
+        });
+      } else {
+        // Fallback: download
+        const a = document.createElement("a");
+        a.href = dataUrl;
+        a.download = `nivpop-${key}.png`;
+        a.click();
+      }
+    } catch { /* cancelled or unavailable */ } finally {
       setImgLoading(false);
     }
   }
 
-  const canNative = typeof navigator !== "undefined" && "share" in navigator;
+  async function handleShareNative() {
+    try { await navigator.share({ text: shareText, title: `NIV'POP — ${f.name}` }); }
+    catch { /* cancelled */ }
+  }
+
+  const waUrl    = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+  const canShare = typeof navigator !== "undefined" && "share" in navigator;
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen px-7 py-16">
@@ -84,13 +96,15 @@ export default function ShareScreen({ state, onBack, onReset }: Props) {
 
       {/* Buttons */}
       <div className="w-full max-w-xs space-y-3">
+        {/* Primary: share image (includes download fallback) */}
         <button
-          onClick={handleDownloadCard}
+          onClick={handleShareImage}
           disabled={imgLoading}
           className="w-full font-sans text-[11px] tracking-[0.3em] uppercase text-ink bg-paper py-4 hover:bg-paper/90 active:scale-95 transition-all disabled:opacity-50"
         >
-          {imgLoading ? "GENERANDO…" : "DESCARGAR IMAGEN"}
+          {imgLoading ? "GENERANDO…" : "COMPARTIR IMAGEN"}
         </button>
+
         <a
           href={waUrl}
           target="_blank"
@@ -99,20 +113,23 @@ export default function ShareScreen({ state, onBack, onReset }: Props) {
         >
           📱 WHATSAPP
         </a>
+
         <button
           onClick={handleCopy}
           className="w-full font-sans text-[11px] tracking-[0.3em] uppercase text-paper border border-paper/20 py-4 hover:border-paper/40 active:scale-95 transition-all"
         >
           {copied ? "✓ COPIADO" : "COPIAR TEXTO"}
         </button>
-        {canNative && (
+
+        {canShare && (
           <button
-            onClick={handleNative}
+            onClick={handleShareNative}
             className="w-full font-sans text-[11px] tracking-[0.3em] uppercase text-paper border border-paper/20 py-4 hover:border-paper/40 active:scale-95 transition-all"
           >
-            COMPARTIR
+            MÁS OPCIONES
           </button>
         )}
+
         <div className="flex gap-3 pt-2">
           <button onClick={onBack} className="flex-1 font-sans text-[11px] tracking-[0.3em] uppercase text-paper/40 py-3 hover:text-paper/60 transition-colors">
             ← Atrás

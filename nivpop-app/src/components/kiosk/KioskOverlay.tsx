@@ -10,6 +10,7 @@ import DuoNamesScreen     from "./screens/DuoNamesScreen";
 import QuizScreen         from "./screens/QuizScreen";
 import DuoQuizScreen      from "./screens/DuoQuizScreen";
 import LoadingScreen      from "./screens/LoadingScreen";
+import RevealScreen       from "./screens/RevealScreen";
 import ResultScreen       from "./screens/ResultScreen";
 import DuoResultScreen    from "./screens/DuoResultScreen";
 import TicketScreen       from "./screens/TicketScreen";
@@ -17,13 +18,14 @@ import ShareScreen        from "./screens/ShareScreen";
 import CatalogScreen      from "./screens/CatalogScreen";
 import CatalogDetailScreen from "./screens/CatalogDetailScreen";
 import PauseScreen        from "./screens/PauseScreen";
+import FolioScreen        from "./screens/FolioScreen";
 
 const IDLE_MS = 45_000;
 
-// Ordered for direction detection (deeper = higher index)
 const SCREEN_ORDER: KioskScreen[] = [
-  "welcome","mode","name-p","name-t","name-surprise","duo-names",
+  "welcome","mode","name-p","name-t","name-surprise","duo-names","folio",
   "quiz","duo-quiz","loading","duo-loading",
+  "reveal","duo-reveal",
   "result","duo-result","ticket","duo-ticket","share",
   "catalog","catalog-detail",
 ];
@@ -44,7 +46,6 @@ export default function KioskOverlay() {
   const [slideDir,  setSlideDir] = useState<"forward" | "back">("forward");
   const prevScreen = useRef<KioskScreen>("welcome");
 
-  // Screen transition direction
   useEffect(() => {
     const pi = SCREEN_ORDER.indexOf(prevScreen.current);
     const ci = SCREEN_ORDER.indexOf(screen);
@@ -52,7 +53,6 @@ export default function KioskOverlay() {
     prevScreen.current = screen;
   }, [screen]);
 
-  // Pause detection (storage event from admin in another tab)
   useEffect(() => {
     const check = () => setPaused(!!getKiosko().pausado);
     check();
@@ -63,7 +63,6 @@ export default function KioskOverlay() {
     return () => window.removeEventListener("storage", onStorage);
   }, []);
 
-  // Idle timer — resets to welcome after IDLE_MS
   useEffect(() => {
     if (screen === "welcome" || paused) return;
     let timer: ReturnType<typeof setTimeout>;
@@ -81,7 +80,7 @@ export default function KioskOverlay() {
   function renderScreen() {
     switch (screen) {
       case "welcome":
-        return <WelcomeScreen onStart={() => go("mode")} onCatalog={() => go("catalog")} onSurprise={() => go("name-surprise")} />;
+        return <WelcomeScreen onStart={() => go("mode")} onCatalog={() => go("catalog")} onSurprise={() => go("name-surprise")} onFolio={() => go("folio")} />;
       case "mode":
         return <ModeScreen onSolo={(m) => go(m === "p" ? "name-p" : "name-t")} onDuo={() => go("duo-names")} onBack={() => go("welcome")} />;
       case "name-p":
@@ -92,6 +91,8 @@ export default function KioskOverlay() {
         return <NameScreen mode="p" headline="¿Cuál es tu nombre?" hint="Te asignamos un sabor sorpresa ✨" onSubmit={startSurprise} onBack={() => go("welcome")} />;
       case "duo-names":
         return <DuoNamesScreen onSubmit={startDuo} onBack={() => go("mode")} />;
+      case "folio":
+        return <FolioScreen onBack={() => go("welcome")} />;
       case "quiz":
         return <QuizScreen state={state} questions={questions} onAnswer={answerSolo} onBack={() => dispatch({ type: "POP_HIST_SOLO" })} />;
       case "duo-quiz":
@@ -100,10 +101,14 @@ export default function KioskOverlay() {
         return <LoadingScreen flavorId={state.rKey} onFinish={finishSolo} />;
       case "duo-loading":
         return <LoadingScreen flavorId={state.dRKey} duo onFinish={finishDuo} />;
+      case "reveal":
+        return <RevealScreen flavorId={state.rKey} onNext={() => go("result")} />;
+      case "duo-reveal":
+        return <RevealScreen flavorId={state.dRKey} duo onNext={() => go("duo-result")} />;
       case "result":
-        return <ResultScreen state={state} onTicket={() => showTicket("solo")} onShare={() => showShare("solo")} onReset={reset} />;
+        return <ResultScreen state={state} onTicket={() => showTicket()} onShare={() => showShare("solo")} onReset={reset} />;
       case "duo-result":
-        return <DuoResultScreen state={state} onTicket={() => showTicket("duo")} onShare={() => showShare("duo")} onReset={reset} />;
+        return <DuoResultScreen state={state} onTicket={() => showTicket()} onShare={() => showShare("duo")} onReset={reset} />;
       case "ticket":
         return <TicketScreen state={state} onReset={reset} />;
       case "duo-ticket":
@@ -121,7 +126,6 @@ export default function KioskOverlay() {
 
   return (
     <div className="fixed inset-0 bg-ink overflow-hidden">
-      {/* Screen with directional slide */}
       <div
         key={screen}
         className={`h-full overflow-y-auto ${
@@ -131,7 +135,6 @@ export default function KioskOverlay() {
         {renderScreen()}
       </div>
 
-      {/* Idle countdown bar */}
       {screen !== "welcome" && (
         <div className="fixed bottom-0 left-0 right-0 h-0.5 bg-transparent pointer-events-none z-50 overflow-hidden">
           <div

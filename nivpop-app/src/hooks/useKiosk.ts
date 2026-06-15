@@ -5,7 +5,7 @@ import type { KioskState, KioskAction, FlavorId, VinculoId, QuizQuestion } from 
 import { mkScores, calcResult, calcCompat, genFolio, applyAnswer, buildDuoQuestions } from "@/lib/quiz";
 import { FLAVORS } from "@/lib/flavors";
 import { QP, QT } from "@/lib/questions";
-import { saveResult, getActiveFlavors } from "@/lib/storage";
+import { saveResultWithScores, getActiveFlavors, addStamp, getQOverrides, applyQOverrides } from "@/lib/storage";
 
 const ALL_IDS = Object.keys(FLAVORS) as FlavorId[];
 
@@ -129,14 +129,26 @@ export function useKiosk() {
 
   const finishSolo = useCallback((state: KioskState) => {
     const f = FLAVORS[state.rKey];
-    saveResult({ modo: state.testMode === "p" ? "solo" : "estado", flavorId: state.rKey, sabor: f.name, flavorColor: state.rKey, nombre1: state.cName });
-    go("result");
+    const folio = genFolio();
+    dispatch({ type: "SET_FOLIO", folio });
+    addStamp();
+    saveResultWithScores(
+      { folio, modo: state.testMode === "p" ? "solo" : "estado", flavorId: state.rKey, sabor: f.name, flavorColor: state.rKey, nombre1: state.cName },
+      state.scores,
+    );
+    go("reveal");
   }, [go]);
 
   const finishDuo = useCallback((state: KioskState) => {
     const f = FLAVORS[state.dRKey];
-    saveResult({ modo: "duo", flavorId: state.dRKey, sabor: f.name, flavorColor: state.dRKey, nombre1: state.dN1, nombre2: state.dN2, compat: state.lastCompat });
-    go("duo-result");
+    const folio = genFolio();
+    dispatch({ type: "SET_FOLIO", folio });
+    addStamp();
+    saveResultWithScores(
+      { folio, modo: "duo", flavorId: state.dRKey, sabor: f.name, flavorColor: state.dRKey, nombre1: state.dN1, nombre2: state.dN2, compat: state.lastCompat },
+      undefined, state.dScores1, state.dScores2,
+    );
+    go("duo-reveal");
   }, [go]);
 
   const startSurprise = useCallback((name: string) => {
@@ -153,17 +165,27 @@ export function useKiosk() {
     go("share");
   }, [go]);
 
-  const showTicket = useCallback((mode: "solo" | "duo") => {
-    dispatch({ type: "SET_FOLIO", folio: genFolio() });
-    go(mode === "solo" ? "ticket" : "duo-ticket");
-  }, [go]);
+  const showTicket = useCallback(() => {
+    // folio already set in finishSolo/finishDuo
+    go(state.shareMode === "duo" ? "duo-ticket" : "ticket");
+  }, [go, state.shareMode]);
 
   const reset = useCallback(() => {
     dispatch({ type: "RESET_ALL" });
     go("welcome");
   }, [go]);
 
-  const questions = state.testMode === "p" ? QP : QT;
+  // Apply custom question overrides from localStorage
+  const ov = typeof window !== "undefined" ? getQOverrides() : {};
+  const questions = applyQOverrides(state.testMode === "p" ? QP : QT, state.testMode === "p" ? ov.p : ov.t);
 
-  return { state, dispatch, go, startSolo, startDuo, startSurprise, answerSolo: (idx: number) => answerSolo(state, idx, questions), answerDuo: (idx: number) => answerDuo(state, idx), finishSolo: () => finishSolo(state), finishDuo: () => finishDuo(state), showShare, showTicket, reset, questions };
+  return {
+    state, dispatch, go,
+    startSolo, startDuo, startSurprise,
+    answerSolo: (idx: number) => answerSolo(state, idx, questions),
+    answerDuo:  (idx: number) => answerDuo(state, idx),
+    finishSolo: () => finishSolo(state),
+    finishDuo:  () => finishDuo(state),
+    showShare, showTicket, reset, questions,
+  };
 }

@@ -47,12 +47,13 @@ export interface Vinculo {
 
 export type KioskScreen =
   | "welcome" | "mode"
-  | "name-p" | "name-t" | "duo-names"
+  | "name-p" | "name-t" | "duo-names" | "name-surprise" | "folio"
   | "quiz" | "duo-quiz"
   | "loading" | "duo-loading"
+  | "reveal" | "duo-reveal"
   | "result" | "duo-result"
   | "ticket" | "duo-ticket"
-  | "share" | "catalog" | "catalog-detail" | "name-surprise";
+  | "share" | "catalog" | "catalog-detail";
 
 export interface KioskState {
   screen: KioskScreen;
@@ -98,6 +99,7 @@ export type KioskAction =
 
 export interface NivResult {
   id: string;
+  folio?: string;
   fecha: string;
   hora: number;
   min: number;
